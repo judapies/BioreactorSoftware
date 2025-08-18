@@ -1,0 +1,27 @@
+[0521/092943.007:ERROR:viz_main_impl.cc(162)] Exiting GPU process due to errors during initialization
+[0521/092943.143:ERROR:gpu_init.cc(441)] Passthrough is not supported, GL is disabled
+[0521/092957.011:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093019.391:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093020.124:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093020.316:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093020.500:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093020.667:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093034.103:ERROR:network_service_instance_impl.cc(331)] Network service crashed, restarting service.
+[0521/093034.107:ERROR:gpu_process_host.cc(995)] GPU process exited unexpectedly: exit_code=1
+[0521/093034.107:WARNING:gpu_process_host.cc(1308)] The GPU process has crashed 1 time(s)
+[0521/093034.235:ERROR:gpu_init.cc(441)] Passthrough is not supported, GL is disabled
+[0521/093034.241:WARNING:gpu_process_host.cc(1023)] Reinitialized the GPU process after a crash. The reported initialization time was 0 ms
+[0521/093712.537:ERROR:viz_main_impl.cc(162)] Exiting GPU process due to errors during initialization
+[0521/093712.664:ERROR:gpu_init.cc(441)] Passthrough is not supported, GL is disabled
+[0521/093830.614:ERROR:gpu_process_host.cc(995)] GPU process exited unexpectedly: exit_code=1
+[0521/093830.614:WARNING:gpu_process_host.cc(1308)] The GPU process has crashed 1 time(s)
+[0521/093830.615:INFO:CONSOLE(1)] "Uncaught ReferenceError: Ux is not defined", source: about:blank (1)
+[0521/093830.737:ERROR:gpu_init.cc(441)] Passthrough is not supported, GL is disabled
+[0521/093830.739:WARNING:gpu_process_host.cc(1023)] Reinitialized the GPU process after a crash. The reported initialization time was 0 ms
+[0521/094214.221:ERROR:viz_main_impl.cc(162)] Exiting GPU process due to errors during initialization
+[0521/094214.364:ERROR:gpu_init.cc(441)] Passthrough is not supported, GL is disabled
+[0521/094337.965:ERROR:network_service_instance_impl.cc(331)] Network service crashed, restarting service.
+[0521/094337.966:ERROR:gpu_process_host.cc(995)] GPU process exited unexpectedly: exit_code=1
+[0521/094337.966:WARNING:gpu_process_host.cc(1308)] The GPU process has crashed 1 time(s)
+[0521/094338.099:ERROR:gpu_init.cc(441)] Passthrough is not supported, GL is disabled
+[0521/094338.101:WARNING:gpu_process_host.cc(1023)] Reinitialized the GPU process after a crash. The reported initialization time was 0 ms
