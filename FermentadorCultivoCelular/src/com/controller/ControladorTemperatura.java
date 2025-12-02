@@ -60,8 +60,10 @@ public class ControladorTemperatura {
         setpoint = bioreactor.getParametros().getTemperatura().getSetpoint();
         desvio = bioreactor.getParametros().getTemperatura().getDesvio();
         histeresis = bioreactor.getParametros().getTemperatura().getHisteresis();
+        bandaInferior = bioreactor.getParametros().getTemperatura().getBandaInferior();
+        bandaSuperior = bioreactor.getParametros().getTemperatura().getBandaSuperior();
 
-        if (bioreactor.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) < 128) {//Reservorio  Lleno de agua
+        if (bioreactor.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) == 5) {//Reservorio  Lleno de agua
             if (calentar) {
                 bioreactor.recircularAgua();//Siempre debe estar recirculando agua
                 if (temperatura > setpoint + bandaSuperior) {
@@ -73,8 +75,8 @@ public class ControladorTemperatura {
                 }
             } else {
                 bioreactor.enfriar();
-                if (temperatura > setpoint + bandaInferior) {
-                    calentar = false;
+                if (temperatura < setpoint + bandaInferior) {
+                    calentar = true;
                 }
             }
         } else {

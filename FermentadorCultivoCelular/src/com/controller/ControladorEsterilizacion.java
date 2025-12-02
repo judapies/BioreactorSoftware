@@ -108,7 +108,7 @@ public class ControladorEsterilizacion {
             } else {
                 esterilizando = false;
                 desfogando = true;
-                tiempoInicio = -1;
+                //tiempoInicio = -1;
                 bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 10); // OFF
                 bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10); // OFF
                 return false;
@@ -116,13 +116,13 @@ public class ControladorEsterilizacion {
         } else if (desfogando) {
             if (presionC > bioreactor.getParametros().getPresion().getPresionAtmosferica()) {
                 finalizo = false;
-                tiempoInicio = -1;
+                //tiempoInicio = -1;
                 bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10); // OFF
                 bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 5); // ON
                 return false;
             } else {
                 finalizo = true;
-                tiempoInicio = -1;
+                //tiempoInicio = -1;
                 bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10); // OFF
                 bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 5); // ON
                 return true;
@@ -327,9 +327,14 @@ public class ControladorEsterilizacion {
     public String getTiempoFormateado() {
         long trans = getTiempoTranscurrido();
         long total = (long) tiempoEsterilizacion;
-
-        return String.format("%02d:%02d / %02d:%02d",
-                trans / 60, trans % 60, total / 60, total % 60);
+        
+        /*return String.format("%02d:%02d / %02d:%02d",
+                trans / 60, trans % 60, total / 60, total % 60);*/
+        if(desfogando || finalizo){
+            return String.format("!Finalizado!");
+        }else{
+            return String.format("%02d:%02d",trans / 60, trans % 60);
+        }
     }
 
     /**

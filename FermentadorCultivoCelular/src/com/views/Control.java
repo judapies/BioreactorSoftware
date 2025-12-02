@@ -147,7 +147,7 @@ public class Control extends javax.swing.JPanel {
         botonNivelMedio = new javax.swing.JButton();
         botonNivelBajo = new javax.swing.JButton();
         SetPointTiempo = new javax.swing.JTextField();
-        PointValueEsteriliación1 = new javax.swing.JTextField();
+        PointValueTiempoEsterilizacion = new javax.swing.JTextField();
         jLabel43 = new javax.swing.JLabel();
         PointValueCO2 = new javax.swing.JTextField();
         PointValueEsterilizacion = new javax.swing.JTextField();
@@ -403,7 +403,7 @@ public class Control extends javax.swing.JPanel {
             }
         });
         jPanel1.add(InicioEsterilizacion);
-        InicioEsterilizacion.setBounds(180, 250, 70, 70);
+        InicioEsterilizacion.setBounds(170, 250, 80, 70);
 
         jLabel40.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel40.setText("PRESION");
@@ -435,13 +435,13 @@ public class Control extends javax.swing.JPanel {
         jPanel1.add(SetPointTiempo);
         SetPointTiempo.setBounds(220, 160, 108, 34);
 
-        PointValueEsteriliación1.setEditable(false);
-        PointValueEsteriliación1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        PointValueEsteriliación1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        PointValueEsteriliación1.setText("0.0");
-        PointValueEsteriliación1.setFocusable(false);
-        jPanel1.add(PointValueEsteriliación1);
-        PointValueEsteriliación1.setBounds(220, 200, 108, 34);
+        PointValueTiempoEsterilizacion.setEditable(false);
+        PointValueTiempoEsterilizacion.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        PointValueTiempoEsterilizacion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        PointValueTiempoEsterilizacion.setText("0.0");
+        PointValueTiempoEsterilizacion.setFocusable(false);
+        jPanel1.add(PointValueTiempoEsterilizacion);
+        PointValueTiempoEsterilizacion.setBounds(220, 200, 108, 34);
 
         jLabel43.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel43.setText("TEMPERATURA");
@@ -690,10 +690,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointEsterilizacionFocusGained
 
     private void SetPointEsterilizacionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointEsterilizacionFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getEsterlizacion().setSetpoint(ocultaPop(SetPointEsterilizacion, bio.getParametros().getEsterlizacion().getSetpoint(), 105, 134));
-                Variables.añadirEvento("Cambio Setpoint de Esterilizacion del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getEsterlizacion().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getEsterlizacion().setSetpoint(ocultaPop(SetPointEsterilizacion, bio.getParametros().getEsterlizacion().getSetpoint(), 105, 134));
+                    Variables.añadirEvento("Cambio Setpoint de Esterilizacion del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getEsterlizacion().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointEsterilizacionFocusLost
@@ -705,10 +707,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointTiempoFocusGained
 
     private void SetPointTiempoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointTiempoFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getEsterlizacion().setTiempoMinutos((int) ocultaPop(SetPointTiempo, bio.getParametros().getEsterlizacion().getTiempoMinutos(), 1, 120));
-                Variables.añadirEvento("Cambio Tiempo de Esterilizacion del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getEsterlizacion().getTiempoMinutos());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getEsterlizacion().setTiempoMinutos((int) ocultaPop(SetPointTiempo, bio.getParametros().getEsterlizacion().getTiempoMinutos(), 1, 120));
+                    Variables.añadirEvento("Cambio Tiempo de Esterilizacion del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getEsterlizacion().getTiempoMinutos());
+                }
             }
         }
     }//GEN-LAST:event_SetPointTiempoFocusLost
@@ -720,10 +724,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointAgitadorFocusGained
 
     private void SetPointAgitadorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointAgitadorFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getAgitacion().setSetpoint(ocultaPop(SetPointAgitador, bio.getParametros().getAgitacion().getSetpoint(), 0, 200));
-                Variables.añadirEvento("Cambio Setpoint de Agitación del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getAgitacion().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getAgitacion().setSetpoint(ocultaPop(SetPointAgitador, bio.getParametros().getAgitacion().getSetpoint(), 0, 200));
+                    Variables.añadirEvento("Cambio Setpoint de Agitación del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getAgitacion().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointAgitadorFocusLost
@@ -735,10 +741,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointOD2FocusGained
 
     private void SetPointOD2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointOD2FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getOd().setSetpoint(ocultaPop(SetPointOD2, bio.getParametros().getOd().getSetpoint(), 0, 200));
-                Variables.añadirEvento("Cambio Setpoint de OD del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getOd().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getOd().setSetpoint(ocultaPop(SetPointOD2, bio.getParametros().getOd().getSetpoint(), 0, 200));
+                    Variables.añadirEvento("Cambio Setpoint de OD del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getOd().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointOD2FocusLost
@@ -750,10 +758,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointpHFocusGained
 
     private void SetPointpHFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointpHFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getPh().setSetpoint(ocultaPop(SetPointpH, bio.getParametros().getPh().getSetpoint(), 0, 14));
-                Variables.añadirEvento("Cambio Setpoint de pH del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getPh().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getPh().setSetpoint(ocultaPop(SetPointpH, bio.getParametros().getPh().getSetpoint(), 0, 14));
+                    Variables.añadirEvento("Cambio Setpoint de pH del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getPh().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointpHFocusLost
@@ -765,10 +775,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointTemperaturaFocusGained
 
     private void SetPointTemperaturaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointTemperaturaFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getTemperatura().setSetpoint(ocultaPop(SetPointTemperatura, bio.getParametros().getTemperatura().getSetpoint(), 10, 100));
-                Variables.añadirEvento("Cambio Setpoint de Temperatura del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getTemperatura().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getTemperatura().setSetpoint(ocultaPop(SetPointTemperatura, bio.getParametros().getTemperatura().getSetpoint(), 10, 100));
+                    Variables.añadirEvento("Cambio Setpoint de Temperatura del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getTemperatura().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointTemperaturaFocusLost
@@ -780,10 +792,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointPresionFocusGained
 
     private void SetPointPresionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointPresionFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getCO2().setSetpoint(ocultaPop(SetPointPresion, bio.getParametros().getCO2().getSetpoint(), 0, 200));
-                Variables.añadirEvento("Cambio Setpoint de venteo del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getPresion().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getCO2().setSetpoint(ocultaPop(SetPointPresion, bio.getParametros().getCO2().getSetpoint(), 0, 200));
+                    Variables.añadirEvento("Cambio Setpoint de venteo del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getPresion().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointPresionFocusLost
@@ -795,10 +809,12 @@ public class Control extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointHisteresisFocusGained
 
     private void SetPointHisteresisFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointHisteresisFocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getCO2().setHisteresis(ocultaPop(SetPointHisteresis, bio.getParametros().getCO2().getHisteresis(), 0, 50));
-                Variables.añadirEvento("Cambio Histeresis de venteo del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getPresion().getSetpoint());
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getCO2().setHisteresis(ocultaPop(SetPointHisteresis, bio.getParametros().getCO2().getHisteresis(), 0, 50));
+                    Variables.añadirEvento("Cambio Histeresis de venteo del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getPresion().getSetpoint());
+                }
             }
         }
     }//GEN-LAST:event_SetPointHisteresisFocusLost
@@ -868,10 +884,10 @@ public class Control extends javax.swing.JPanel {
     public static javax.swing.JButton InicioEsterilizacion;
     public static javax.swing.JTextField PointValueAgitador;
     public static javax.swing.JTextField PointValueCO2;
-    public static javax.swing.JTextField PointValueEsteriliación1;
     public static javax.swing.JTextField PointValueEsterilizacion;
     public static javax.swing.JTextField PointValueOD;
     public static javax.swing.JTextField PointValueTemperatura;
+    public static javax.swing.JTextField PointValueTiempoEsterilizacion;
     public static javax.swing.JTextField PointValuepH;
     public static javax.swing.JTextField SetPointAgitador;
     public static javax.swing.JTextField SetPointEsterilizacion;

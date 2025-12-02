@@ -25,6 +25,7 @@ public class Password extends javax.swing.JFrame {
     com.control.AjustespH pH = new com.control.AjustespH();
     com.control.AjustesOD OD = new com.control.AjustesOD();
     com.control.AjustesEsterilizacion esterilizacion = new com.control.AjustesEsterilizacion();
+    com.control.AjustesPresion presion = new com.control.AjustesPresion();
 
     /**
      * Creates new form TecladoLetras
@@ -235,11 +236,16 @@ public class Password extends javax.swing.JFrame {
                     esterilizacion.setVisible(true);
                     Variables.añadirEvento("Ingreso a parametros de Esterilización");
                 }
+                if (Variables.ajustePresion) {
+                    presion.setVisible(true);
+                    Variables.añadirEvento("Ingreso a parametros de Esterilización");
+                }
                 Variables.ajusteAgitador = false;
                 Variables.ajusteTemperatura = false;
                 Variables.ajustepH = false;
                 Variables.ajusteOD = false;
                 Variables.ajusteEsterilizacion = false;
+                Variables.ajustePresion = false;
                 Variables.contraseña = String.valueOf(jPasswordField1.getPassword());
                 dispose();
             } else {
@@ -293,6 +299,7 @@ public class Password extends javax.swing.JFrame {
         Variables.ajusteOD = false;
         Variables.ajusteCO2 = false;
         Variables.ajusteRedox = false;
+        Variables.ajustePresion = false;
         Variables.ajusteEsterilizacion = false;
         dispose();
     }//GEN-LAST:event_CancelActionPerformed
@@ -304,6 +311,7 @@ public class Password extends javax.swing.JFrame {
         Variables.ajusteOD = false;
         Variables.ajusteCO2 = false;
         Variables.ajusteRedox = false;
+        Variables.ajustePresion = false;
         Variables.ajusteEsterilizacion = false;
     }//GEN-LAST:event_formWindowClosing
 

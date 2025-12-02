@@ -118,6 +118,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             Variables.bioreactores = new ArrayList<>();
         }
         for (int i = 101; i < 104; i++) {
+        //for (int i = 101; i < 102; i++) {//Modificado para prueba con solo un esclavo-26/11/2025
             File f = new File("bioreactor_config_" + i + ".dat");
             if (f.exists()) {
                 try {
@@ -132,8 +133,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             }
         }
         Variables.bioreactores.get(0).setCapacidadLitros(1);
-        Variables.bioreactores.get(1).setCapacidadLitros(5);
+        //Variables.bioreactores.get(1).setCapacidadLitros(5);
         for (Bioreactor bio : Variables.bioreactores) {
+            bio.setEstadoControlAgitacion(false);
+            bio.setEstadoControlCO2(false);
+            bio.setEstadoControlEsterilizacion(false);
+            bio.setEstadoControlOD(false);
+            bio.setEstadoControlTemperatura(false);
+            bio.setEstadoControlpH(false);
             System.out.println(bio.getId());
             System.out.println(bio.getCapacidadLitros());
             System.out.println(bio.getBomba(0).getPorcentajeDuty());

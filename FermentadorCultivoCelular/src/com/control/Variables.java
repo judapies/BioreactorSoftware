@@ -116,7 +116,7 @@ public class Variables implements Serializable {
     public static int SPBomba4 = 0;
     public static boolean asignaAcido = false, asignaBase = false, asignaFoam = false, asignaNivel2S = false, asignaNivel2H = false;
     public static String asignacionBomba1 = "Ninguno", asignacionBomba2 = "Ninguno", asignacionBomba3 = "Ninguno",
-            asignacionBomba4 = "Ninguno", usuario = "JPINGLOBAL", contraseña = "900409216", rol = "ADMIN", bioreactor = "";
+            asignacionBomba4 = "Ninguno", usuario = "", contraseña = "900409216", rol = "ADMIN", bioreactor = "";
     public static boolean estadoOn1 = false, estadoOn2 = false, estadoOn3 = false, estadoOn4 = false, login = true, estadoPeltierp = false, estadoPeltiern = false;
     public static boolean calibraBomba1 = false, calibraBomba2 = false, calibraBomba3 = false, calibraBomba4 = false;
     public static double totalBomba1 = 0, totalBomba2 = 0, totalBomba3 = 0, totalBomba4 = 0;

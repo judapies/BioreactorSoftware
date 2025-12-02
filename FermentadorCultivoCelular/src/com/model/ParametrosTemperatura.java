@@ -24,6 +24,8 @@ public class ParametrosTemperatura extends ParametrosControl implements Serializ
     private double mTem;
     private double bTem;
     private double histeresis;
+    private double bandaInferior;
+    private double bandaSuperior;
 
     public double getDesvio() {
         return desvio;
@@ -109,5 +111,33 @@ public class ParametrosTemperatura extends ParametrosControl implements Serializ
      */
     public void setHisteresis(double histeresis) {
         this.histeresis = histeresis;
+    }
+
+    /**
+     * @return the bandaInferior
+     */
+    public double getBandaInferior() {
+        return bandaInferior;
+    }
+
+    /**
+     * @param bandaInferior the bandaInferior to set
+     */
+    public void setBandaInferior(double bandaInferior) {
+        this.bandaInferior = bandaInferior;
+    }
+
+    /**
+     * @return the bandaSuperior
+     */
+    public double getBandaSuperior() {
+        return bandaSuperior;
+    }
+
+    /**
+     * @param bandaSuperior the bandaSuperior to set
+     */
+    public void setBandaSuperior(double bandaSuperior) {
+        this.bandaSuperior = bandaSuperior;
     }
 }

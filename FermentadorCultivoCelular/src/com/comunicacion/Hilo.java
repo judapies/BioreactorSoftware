@@ -44,6 +44,10 @@ public class Hilo implements Runnable {
     List<ControladorNivel> controladorNivel = new ArrayList<>();
     List<ControladorTemperatura> controladorTemperatura = new ArrayList<>();
 
+    int presionPreCamara = 0;
+    double temperatura = 10;
+    boolean inicio = false;
+
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
@@ -58,13 +62,13 @@ public class Hilo implements Runnable {
             controladorNivel.add(new ControladorNivel(bioreactor));
             controladorTemperatura.add(new ControladorTemperatura(bioreactor));
         }
-        boolean inicio = false;
 
         while (true) {
             for (int i = 0; i < Variables.bioreactores.size(); i++) {
                 Bioreactor b = Variables.bioreactores.get(i);
                 try {
-                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
+                    //simulaLecturas();
+                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, true));
                 } catch (Exception e) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, "Error en establecer Comunicacion", e);
                     JOptionPane.showMessageDialog(null,
@@ -191,23 +195,29 @@ public class Hilo implements Runnable {
                     System.out.println("Esperando Reactor " + b.getId());
                 }
                 tmp = iface.QRead(64, 10);
-                if (tiempoespera >= 5000) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (tiempoespera >= 50000) {
                     tiempoespera = 0;
                     break;
                 }
                 tiempoespera++;
-            }
-            if (imprime) {
-                System.out.println("Lectura Exitosa");
-            }
-            for (int i = 0; i < 64; i++) {
+                for (int i = 0; i < 32; i++) {
+                    if (imprime) {
+                        System.out.print(tmp[i]);
+                        System.out.print("-");
+                    }
+                }
                 if (imprime) {
-                    System.out.print(tmp[i]);
-                    System.out.print("-");
+                    System.out.println("");
                 }
             }
+            tiempoespera = 0;
             if (imprime) {
-                System.out.println("");
+                System.out.println("Lectura Exitosa");
             }
         } else {
             if (tiempoespera >= 20) {
@@ -226,9 +236,28 @@ public class Hilo implements Runnable {
 
     public void simulaLecturas() {
         DecimalFormat decimales2 = new DecimalFormat("0.0");
-        Variables.nivel2 = true;
+
         Variables.valorTemperatura += 0.1;
-        com.views.Control.PointValueTemperatura.setText("" + decimales2.format(Variables.valorTemperatura));// Imprime valor en promedio            
+        Bioreactor bio1 = Variables.bioreactores.get(1);
+
+        if (bio1.leerSalida(Bioreactor.Salida.SUMINISTRO_VAPOR) == 5) {
+            bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA, presionPreCamara++);
+        } else {
+            if (presionPreCamara >= 0) {
+                bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA, presionPreCamara--);
+            }
+        }
+        bio1.actualizarEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1, 5);
+        if (bio1.isEstadoControlTemperatura()) {
+            if (bio1.leerSalida(Bioreactor.Salida.ENTRADA_INTERCAMBIADOR) == 5) {
+                bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura += 1.1);
+            } else {
+                bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura -= 1.1);
+
+            }
+        } else {
+            bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 8.5);
+        }
 
     }
 
@@ -238,7 +267,9 @@ public class Hilo implements Runnable {
         DecimalFormat decimales2 = new DecimalFormat("0.0");
         DecimalFormat decimal = new DecimalFormat("000");//Formato para mostrar la presion
 
-        for (Bioreactor bio : Variables.bioreactores) {
+        //for (Bioreactor bio : Variables.bioreactores) {
+        for (int i = 0; i < Variables.bioreactores.size(); i++) {
+            Bioreactor bio = Variables.bioreactores.get(i);
             //Actualiza Label de Interfaz Principal
             if (bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) < 5.0 || bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) > 200.0) {
                 LabelUpdater.actualizarLabel("Temperatura", bio.getId() - 100, "---");
@@ -278,6 +309,7 @@ public class Hilo implements Runnable {
                     com.views.Control.pointValuePresionCamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA)));
                     com.views.Control.pointValuePresionPrecamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA)));
                     com.views.Control.PointValueCO2.setText(Double.toString(bio.leerEntrada(Bioreactor.Entrada.CO2)));
+                    com.views.Control.PointValueTiempoEsterilizacion.setText(controladorEsterilizacion.get(i).getTiempoFormateado());
                 }
 
                 if (Variables.testComponentes) {
@@ -288,10 +320,10 @@ public class Hilo implements Runnable {
                     com.views.TestComponentes.PointValueAgitador.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.RPM_CH1)));
                     com.views.TestComponentes.PointValueRPMCH2.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.RPM_CH2)));
 
-                    com.views.TestComponentes.botonNivelAlto.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 128 ? "Activo" : "No activo");
-                    com.views.TestComponentes.botonNivelMedio.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 128 ? "Activo" : "No activo");
-                    com.views.TestComponentes.botonNivelBajo.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 128 ? "Activo" : "No activo");
-                    com.views.TestComponentes.PointValueIN1.setText(bio.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) < 128 ? "Activo" : "No activo");
+                    com.views.TestComponentes.botonNivelAlto.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 60 ? "Activo" : "No activo");
+                    com.views.TestComponentes.botonNivelMedio.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 60 ? "Activo" : "No activo");
+                    com.views.TestComponentes.botonNivelBajo.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 50 ? "Activo" : "No activo");
+                    com.views.TestComponentes.PointValueIN1.setText(bio.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) == 5 ? "Activo" : "No activo");
                     com.views.TestComponentes.PointValueIN2.setText(bio.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_2) < 128 ? "Activo" : "No activo");
 
                     com.views.TestComponentes.PointValuePresionCamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA)) + " kpa");

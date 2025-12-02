@@ -529,7 +529,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="180" y="250" width="70" height="70"/>
+              <AbsoluteConstraints x="170" y="250" width="80" height="70"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -611,7 +611,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JTextField" name="PointValueEsteriliaci&#xf3;n1">
+        <Component class="javax.swing.JTextField" name="PointValueTiempoEsterilizacion">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
