@@ -561,7 +561,7 @@ public class BombasPeristalticas extends javax.swing.JPanel {
                             bio.getBomba(j).setRunBomba(true);
                             //Variables.estadoControlBomba1 = true;
                             //Variables.runBomba1 = true;
-                            Variables.añadirEvento("Activo modo manual Bomba peristaltica " + (j + 1) + " Bioreactor " + bio.getCapacidadLitros());                            
+                            Variables.añadirEvento("Activo modo manual Bomba peristaltica " + (j + 1) + " Bioreactor " + bio.getCapacidadLitros());
                         }
                     }
                 } else {
@@ -587,7 +587,7 @@ public class BombasPeristalticas extends javax.swing.JPanel {
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
                 if (!bio.getBomba(0).isRunBomba()) {
-                    Variables.añadirEvento("Activo modo automatico Bomba peristaltica " + bio.getBomba(1) + " Bioreactor " + bio.getId());                    
+                    Variables.añadirEvento("Activo modo automatico Bomba peristaltica " + bio.getBomba(1) + " Bioreactor " + bio.getId());
                     bio.getBomba(0).setEstadoOn(true);
                     bomba1On.setBackground(Color.GREEN);
                     bomba1On.setOpaque(true);
@@ -634,10 +634,12 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointBomba1FocusGained
 
     private void SetPointBomba1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointBomba1FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getBomba(0).setPorcentajeDuty(ocultaPop(SetPointBomba1, (int) bio.getBomba(0).getPorcentajeDuty(), 0, 100));
-                Variables.añadirEvento("Cambio Setpoint de Bomba 1 Biorreactor " + (bio.getId()-100));
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getBomba(0).setPorcentajeDuty(ocultaPop(SetPointBomba1, (int) bio.getBomba(0).getPorcentajeDuty(), 0, 100));
+                    Variables.añadirEvento("Cambio Setpoint de Bomba 1 Biorreactor " + (bio.getId() - 100));
+                }
             }
         }
         focusGained = false;
@@ -651,10 +653,12 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_PeriodoBomba1FocusGained
 
     private void PeriodoBomba1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PeriodoBomba1FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getBomba(0).setTiempoEncendidoSegundos(ocultaPop(PeriodoBomba1, (int) bio.getBomba(0).getTiempoEncendidoSegundos(), 0, 60));
-                Variables.añadirEvento("Cambio Periodo de Bomba 1 Biorreactor " + (bio.getId()-100));
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getBomba(0).setTiempoEncendidoSegundos(ocultaPop(PeriodoBomba1, (int) bio.getBomba(0).getTiempoEncendidoSegundos(), 0, 60));
+                    Variables.añadirEvento("Cambio Periodo de Bomba 1 Biorreactor " + (bio.getId() - 100));
+                }
             }
         }
         focusGained = false;
@@ -675,18 +679,20 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_asignacionBomba1FocusGained
 
     private void asignacionBomba1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_asignacionBomba1FocusLost
-        ocultaPopA();
-        String nuevaAsignacion = asignacionBomba1.getText().trim();
+        if (Variables.rol.equals("Administrador")) {
+            ocultaPopA();
+            String nuevaAsignacion = asignacionBomba1.getText().trim();
 
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (bio.getId() == Variables.idBioreactor) {
-                if (!nuevaAsignacion.isEmpty() && !verificarAsignacionDuplicadaEnMismoBioreactor(bio, nuevaAsignacion, 0)) {
-                    bio.getBomba(0).getParametros().setAsignacionBomba(nuevaAsignacion);
-                    Variables.añadirEvento("Asigno en la bomba 1 " + nuevaAsignacion+" del Biorreactor "+(bio.getId()-100));
-                } else {
-                    asignacionBomba1.setText(bio.getBomba(0).getParametros().getAsignacionBomba());
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (bio.getId() == Variables.idBioreactor) {
+                    if (!nuevaAsignacion.isEmpty() && !verificarAsignacionDuplicadaEnMismoBioreactor(bio, nuevaAsignacion, 0)) {
+                        bio.getBomba(0).getParametros().setAsignacionBomba(nuevaAsignacion);
+                        Variables.añadirEvento("Asigno en la bomba 1 " + nuevaAsignacion + " del Biorreactor " + (bio.getId() - 100));
+                    } else {
+                        asignacionBomba1.setText(bio.getBomba(0).getParametros().getAsignacionBomba());
+                    }
+                    break;
                 }
-                break;
             }
         }
         focusGained = false;
@@ -710,21 +716,23 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_bomba2OnActionPerformed
 
     private void bomba2OffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bomba2OffActionPerformed
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                String asignacion = bio.getBomba(1).getParametros().getAsignacionBomba();
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    String asignacion = bio.getBomba(1).getParametros().getAsignacionBomba();
 
-                if ((asignacion.equals("Acido") || asignacion.equals("Base")) && bio.isEstadoControlpH()) {
-                    JOptionPane.showMessageDialog(null,
-                            "Primero debe detener el control de pH",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    Variables.añadirEvento("Desactivo modo automatico Bomba peristaltica 2 Bioreactor " + bio.getId());
-                    bio.getBomba(1).setEstadoOn(false);
-                    bomba2On.setBackground(Color.GRAY);
-                    bomba2On.setOpaque(true);
-                    bomba2Off.setBackground(Color.RED);
-                    bomba2Off.setOpaque(true);
+                    if ((asignacion.equals("Acido") || asignacion.equals("Base")) && bio.isEstadoControlpH()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Primero debe detener el control de pH",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        Variables.añadirEvento("Desactivo modo automatico Bomba peristaltica 2 Bioreactor " + bio.getId());
+                        bio.getBomba(1).setEstadoOn(false);
+                        bomba2On.setBackground(Color.GRAY);
+                        bomba2On.setOpaque(true);
+                        bomba2Off.setBackground(Color.RED);
+                        bomba2Off.setOpaque(true);
+                    }
                 }
             }
         }
@@ -738,10 +746,12 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointBomba2FocusGained
 
     private void SetPointBomba2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointBomba2FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getBomba(1).setPorcentajeDuty(ocultaPop(SetPointBomba2, (int) bio.getBomba(1).getPorcentajeDuty(), 0, 100));
-                Variables.añadirEvento("Cambio Setpoint de Bomba 2 Biorreactor " + (bio.getId()-100));
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getBomba(1).setPorcentajeDuty(ocultaPop(SetPointBomba2, (int) bio.getBomba(1).getPorcentajeDuty(), 0, 100));
+                    Variables.añadirEvento("Cambio Setpoint de Bomba 2 Biorreactor " + (bio.getId() - 100));
+                }
             }
         }
         focusGained = false;
@@ -755,10 +765,12 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_PeriodoBomba2FocusGained
 
     private void PeriodoBomba2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PeriodoBomba2FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getBomba(1).setTiempoEncendidoSegundos(ocultaPop(PeriodoBomba2, (int) bio.getBomba(1).getTiempoEncendidoSegundos(), 0, 60));
-                Variables.añadirEvento("Cambio Periodo de Bomba 2 Biorreactor " + (bio.getId()-100));
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getBomba(1).setTiempoEncendidoSegundos(ocultaPop(PeriodoBomba2, (int) bio.getBomba(1).getTiempoEncendidoSegundos(), 0, 60));
+                    Variables.añadirEvento("Cambio Periodo de Bomba 2 Biorreactor " + (bio.getId() - 100));
+                }
             }
         }
         focusGained = false;
@@ -783,18 +795,20 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_asignacionBomba2FocusGained
 
     private void asignacionBomba2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_asignacionBomba2FocusLost
-        ocultaPopA();
-        String nuevaAsignacion = asignacionBomba2.getText().trim();
+        if (Variables.rol.equals("Administrador")) {
+            ocultaPopA();
+            String nuevaAsignacion = asignacionBomba2.getText().trim();
 
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (bio.getId() == Variables.idBioreactor) {
-                if (!nuevaAsignacion.isEmpty() && !verificarAsignacionDuplicadaEnMismoBioreactor(bio, nuevaAsignacion, 1)) {
-                    bio.getBomba(1).getParametros().setAsignacionBomba(nuevaAsignacion);
-                    Variables.añadirEvento("Asigno en la bomba 1 " + nuevaAsignacion+" del Biorreactor "+(bio.getId()-100));
-                } else {
-                    asignacionBomba2.setText(bio.getBomba(1).getParametros().getAsignacionBomba());
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (bio.getId() == Variables.idBioreactor) {
+                    if (!nuevaAsignacion.isEmpty() && !verificarAsignacionDuplicadaEnMismoBioreactor(bio, nuevaAsignacion, 1)) {
+                        bio.getBomba(1).getParametros().setAsignacionBomba(nuevaAsignacion);
+                        Variables.añadirEvento("Asigno en la bomba 1 " + nuevaAsignacion + " del Biorreactor " + (bio.getId() - 100));
+                    } else {
+                        asignacionBomba2.setText(bio.getBomba(1).getParametros().getAsignacionBomba());
+                    }
+                    break;
                 }
-                break;
             }
         }
         focusGained = false;
@@ -818,21 +832,23 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_bomba3OnActionPerformed
 
     private void bomba3OffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bomba3OffActionPerformed
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                String asignacion = bio.getBomba(2).getParametros().getAsignacionBomba();
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    String asignacion = bio.getBomba(2).getParametros().getAsignacionBomba();
 
-                if ((asignacion.equals("Acido") || asignacion.equals("Base")) && bio.isEstadoControlpH()) {
-                    JOptionPane.showMessageDialog(null,
-                            "Primero debe detener el control de pH",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    Variables.añadirEvento("Desactivo modo automatico Bomba peristaltica 3 Bioreactor " + bio.getId());
-                    bio.getBomba(2).setEstadoOn(false);
-                    bomba3On.setBackground(Color.GRAY);
-                    bomba3On.setOpaque(true);
-                    bomba3Off.setBackground(Color.RED);
-                    bomba3Off.setOpaque(true);
+                    if ((asignacion.equals("Acido") || asignacion.equals("Base")) && bio.isEstadoControlpH()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Primero debe detener el control de pH",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        Variables.añadirEvento("Desactivo modo automatico Bomba peristaltica 3 Bioreactor " + bio.getId());
+                        bio.getBomba(2).setEstadoOn(false);
+                        bomba3On.setBackground(Color.GRAY);
+                        bomba3On.setOpaque(true);
+                        bomba3Off.setBackground(Color.RED);
+                        bomba3Off.setOpaque(true);
+                    }
                 }
             }
         }
@@ -846,10 +862,12 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_SetPointBomba3FocusGained
 
     private void SetPointBomba3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SetPointBomba3FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getBomba(2).setPorcentajeDuty(ocultaPop(SetPointBomba3, (int) bio.getBomba(2).getPorcentajeDuty(), 0, 100));
-                Variables.añadirEvento("Cambio Setpoint de Bomba 3 Bioreactor " + (bio.getId()-100));
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getBomba(2).setPorcentajeDuty(ocultaPop(SetPointBomba3, (int) bio.getBomba(2).getPorcentajeDuty(), 0, 100));
+                    Variables.añadirEvento("Cambio Setpoint de Bomba 3 Bioreactor " + (bio.getId() - 100));
+                }
             }
         }
         focusGained = false;
@@ -863,10 +881,12 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_PeriodoBomba3FocusGained
 
     private void PeriodoBomba3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PeriodoBomba3FocusLost
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getBomba(2).setTiempoEncendidoSegundos(ocultaPop(PeriodoBomba3, (int) bio.getBomba(2).getTiempoEncendidoSegundos(), 0, 60));
-                Variables.añadirEvento("Cambio Periodo de Bomba 3 Biorreactor " + (bio.getId()-100));
+        if (Variables.rol.equals("Administrador")) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getBomba(2).setTiempoEncendidoSegundos(ocultaPop(PeriodoBomba3, (int) bio.getBomba(2).getTiempoEncendidoSegundos(), 0, 60));
+                    Variables.añadirEvento("Cambio Periodo de Bomba 3 Biorreactor " + (bio.getId() - 100));
+                }
             }
         }
         focusGained = false;
@@ -891,18 +911,20 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     }//GEN-LAST:event_asignacionBomba3FocusGained
 
     private void asignacionBomba3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_asignacionBomba3FocusLost
-        ocultaPopA();
-        String nuevaAsignacion = asignacionBomba3.getText().trim();
+        if (Variables.rol.equals("Administrador")) {
+            ocultaPopA();
+            String nuevaAsignacion = asignacionBomba3.getText().trim();
 
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (bio.getId() == Variables.idBioreactor) {
-                if (!nuevaAsignacion.isEmpty() && !verificarAsignacionDuplicadaEnMismoBioreactor(bio, nuevaAsignacion, 2)) {
-                    bio.getBomba(2).getParametros().setAsignacionBomba(nuevaAsignacion);
-                    Variables.añadirEvento("Asigno en la bomba 1 " + nuevaAsignacion+" del Biorreactor "+(bio.getId()-100));
-                } else {
-                    asignacionBomba1.setText(bio.getBomba(2).getParametros().getAsignacionBomba());
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (bio.getId() == Variables.idBioreactor) {
+                    if (!nuevaAsignacion.isEmpty() && !verificarAsignacionDuplicadaEnMismoBioreactor(bio, nuevaAsignacion, 2)) {
+                        bio.getBomba(2).getParametros().setAsignacionBomba(nuevaAsignacion);
+                        Variables.añadirEvento("Asigno en la bomba 1 " + nuevaAsignacion + " del Biorreactor " + (bio.getId() - 100));
+                    } else {
+                        asignacionBomba1.setText(bio.getBomba(2).getParametros().getAsignacionBomba());
+                    }
+                    break;
                 }
-                break;
             }
         }
         focusGained = false;
@@ -925,7 +947,7 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     public static boolean verificarAsignacionDuplicadaEnMismoBioreactor(Bioreactor bio, String nuevaAsignacion, int indiceActual) {
         for (int i = 0; i < bio.getBombasSize(); i++) {
             if (i == indiceActual) {
-                continue; 
+                continue;
             }
             String asignacion = bio.getBomba(i).getParametros().getAsignacionBomba();
             if (nuevaAsignacion.equalsIgnoreCase(asignacion)) {

@@ -304,13 +304,33 @@ public class Bioreactor implements IBioreactor, Serializable {
     }
 
     /**
+     * Detiene el proceso de enfriamiento del biorreactor. Apaga las salidas
+     * de agua de enfriamiento
+     */
+    @Override
+    public void detieneEnfriar() {
+        activarSalida(Salida.SUMINISTRO_VAPOR, OFF);
+        activarSalida(Salida.RECIRCULACION, OFF);
+        activarSalida(Salida.ENTRADA_INTERCAMBIADOR, OFF);
+        activarSalida(Salida.SALIDA_INTERCAMBIADOR, OFF);
+        activarSalida(Salida.BOMBA_ENCARCELACION, OFF);
+        activarSalida(Salida.DRENAJE, OFF);
+        activarSalida(Salida.SUMINISTRO_AGUA_ENFRIAMIENTO, OFF);
+        activarSalida(Salida.SALIDA_AGUA_ENFRIAMIENTO, OFF);
+        activarSalida(Salida.BOMBA_RECIRCULACION, OFF);
+        activarSalida(Salida.INGRESO_CO2, OFF);
+        activarSalida(Salida.VENTEO_CO2, OFF);
+        activarSalida(Salida.DESFOGUE_VAPOR, OFF);
+    }
+    
+    /**
      * Controla el llenado del reservorio de recirculación. Si la entrada
      * digital 1 está desactivada (OFF), se activa la recirculación y el
      * suministro de agua. Si la entrada digital 1 está activada (ON), se apagan
      * todas las salidas.
      */
     public boolean llenadoReservorio() {
-        if (leerEntrada(Entrada.ENTRADA_DIGITAL_1) >=128) {
+        if (leerEntrada(Entrada.ENTRADA_DIGITAL_1) !=5) {
             activarSalida(Salida.SUMINISTRO_VAPOR, OFF);
             activarSalida(Salida.RECIRCULACION, ON);
             activarSalida(Salida.ENTRADA_INTERCAMBIADOR, OFF);
@@ -350,6 +370,22 @@ public class Bioreactor implements IBioreactor, Serializable {
         activarSalida(Salida.SUMINISTRO_AGUA_ENFRIAMIENTO, OFF);
         activarSalida(Salida.SALIDA_AGUA_ENFRIAMIENTO, OFF);
         activarSalida(Salida.BOMBA_RECIRCULACION, ON);
+        activarSalida(Salida.DESFOGUE_VAPOR, OFF);
+    }
+    
+    /**
+     * Activa la recirculación de agua por la chaqueta del biorreactor. Enciende
+     * las bombas y la recirculación; apaga el resto de salidas.
+     */
+    @Override
+    public void detieneRecircularAgua() {
+        activarSalida(Salida.SUMINISTRO_VAPOR, OFF);
+        activarSalida(Salida.RECIRCULACION, OFF);
+        activarSalida(Salida.BOMBA_ENCARCELACION, OFF);
+        activarSalida(Salida.DRENAJE, OFF);
+        activarSalida(Salida.SUMINISTRO_AGUA_ENFRIAMIENTO, OFF);
+        activarSalida(Salida.SALIDA_AGUA_ENFRIAMIENTO, OFF);
+        activarSalida(Salida.BOMBA_RECIRCULACION, OFF);
         activarSalida(Salida.DESFOGUE_VAPOR, OFF);
     }
 

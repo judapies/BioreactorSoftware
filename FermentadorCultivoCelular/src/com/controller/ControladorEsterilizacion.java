@@ -360,6 +360,7 @@ public class ControladorEsterilizacion {
         tiempoInicio = -1;
         bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10);
         bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 10);
+        bioreactor.activarSalida(Bioreactor.Salida.DRENAJE, 10);
     }
     
     /**

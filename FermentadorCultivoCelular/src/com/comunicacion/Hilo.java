@@ -68,7 +68,7 @@ public class Hilo implements Runnable {
                 Bioreactor b = Variables.bioreactores.get(i);
                 try {
                     //simulaLecturas();
-                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, true));
+                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
                 } catch (Exception e) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, "Error en establecer Comunicacion", e);
                     JOptionPane.showMessageDialog(null,
@@ -196,7 +196,7 @@ public class Hilo implements Runnable {
                 }
                 tmp = iface.QRead(64, 10);
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -256,7 +256,7 @@ public class Hilo implements Runnable {
 
             }
         } else {
-            bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 8.5);
+            bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 98.5);
         }
 
     }
@@ -303,9 +303,9 @@ public class Hilo implements Runnable {
                     com.views.Control.PointValuepH.setText(phOK ? decimales2.format(valorPH) : "---");
                     com.views.Control.PointValueOD.setText(odOK ? decimales2.format(valorOD) : "---");
                     com.views.Control.PointValueAgitador.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.RPM_CH1)));  // Imprime valor en promedio
-                    com.views.Control.botonNivelAlto.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) >= 128 ? Color.GREEN : Color.RED);
-                    com.views.Control.botonNivelMedio.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) >= 128 ? Color.GREEN : Color.RED);
-                    com.views.Control.botonNivelBajo.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) >= 128 ? Color.GREEN : Color.RED);
+                    com.views.Control.botonNivelAlto.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 60 ? Color.GREEN : Color.RED);
+                    com.views.Control.botonNivelMedio.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 60 ? Color.GREEN : Color.RED);
+                    com.views.Control.botonNivelBajo.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 60 ? Color.GREEN : Color.RED);
                     com.views.Control.pointValuePresionCamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA)));
                     com.views.Control.pointValuePresionPrecamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA)));
                     com.views.Control.PointValueCO2.setText(Double.toString(bio.leerEntrada(Bioreactor.Entrada.CO2)));
@@ -322,9 +322,9 @@ public class Hilo implements Runnable {
 
                     com.views.TestComponentes.botonNivelAlto.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 60 ? "Activo" : "No activo");
                     com.views.TestComponentes.botonNivelMedio.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 60 ? "Activo" : "No activo");
-                    com.views.TestComponentes.botonNivelBajo.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 50 ? "Activo" : "No activo");
+                    com.views.TestComponentes.botonNivelBajo.setText(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 60 ? "Activo" : "No activo");
                     com.views.TestComponentes.PointValueIN1.setText(bio.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) == 5 ? "Activo" : "No activo");
-                    com.views.TestComponentes.PointValueIN2.setText(bio.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_2) < 128 ? "Activo" : "No activo");
+                    com.views.TestComponentes.PointValueIN2.setText(bio.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_2) == 5 ? "Activo" : "No activo");
 
                     com.views.TestComponentes.PointValuePresionCamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA)) + " kpa");
                     com.views.TestComponentes.PointValuePresionPrecamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA)) + " kpa");

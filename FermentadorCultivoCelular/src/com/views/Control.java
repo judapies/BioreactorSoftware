@@ -590,6 +590,9 @@ public class Control extends javax.swing.JPanel {
                     if ("Iniciar".equals(InicioControlTemperatura.getText())) {
                         //if (Variables.valorTemperatura > 0 && Variables.valorTemperatura < 200) {
                         if (bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) > 0 && bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) < 200) {
+                            if(bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1)>90.0 && bio.getParametros().getTemperatura().getSetpoint()<90.0){
+                                JOptionPane.showMessageDialog(this, "El enfriamiento iniciara cuando la tempertura disminuya de 90°C");
+                            }
                             Variables.añadirEvento("Inicio Control de Temperatura Bioreactor " + bio.getId());
                             InicioControlTemperatura.setText("Detener");
                             InicioControlTemperatura.setBackground(Color.RED);

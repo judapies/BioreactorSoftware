@@ -19,7 +19,9 @@ public interface IBioreactor {
     //public boolean esterilizar(double setpointEsterilizacion, double histeresis, double desvio);
     void desfogar();
     void enfriar();
+    void detieneEnfriar();
     void recircularAgua();
+    void detieneRecircularAgua();
     void controlarVenteoCO2(double setpoint, double histeresis);
     void activarCO2(Integer activar);
 

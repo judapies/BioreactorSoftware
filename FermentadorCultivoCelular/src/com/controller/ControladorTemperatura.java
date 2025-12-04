@@ -12,6 +12,7 @@ package com.controller;
 import com.model.Bioreactor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class ControladorTemperatura {
@@ -35,6 +36,7 @@ public class ControladorTemperatura {
     private double aumento;
     private double potencia;
     private boolean calentar = true;
+    private boolean mensaje = false;
     private int y=0;
     private double[]x=new double[2]; 
     
@@ -74,7 +76,9 @@ public class ControladorTemperatura {
                     bioreactor.calentamientoAguaIntercambiador();
                 }
             } else {
-                bioreactor.enfriar();
+                if(temperatura<=90){
+                    bioreactor.enfriar();
+                }
                 if (temperatura < setpoint + bandaInferior) {
                     calentar = true;
                 }
@@ -90,6 +94,8 @@ public class ControladorTemperatura {
      */
     public void detenerIntercambiador() {
         bioreactor.detieneCalentamientoIntercambiador();
+        bioreactor.detieneEnfriar();
+        bioreactor.detieneRecircularAgua();
     }
 
     /**
