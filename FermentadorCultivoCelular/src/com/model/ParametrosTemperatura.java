@@ -26,6 +26,7 @@ public class ParametrosTemperatura extends ParametrosControl implements Serializ
     private double histeresis;
     private double bandaInferior;
     private double bandaSuperior;
+    private boolean controlIntercambiador;
 
     public double getDesvio() {
         return desvio;
@@ -139,5 +140,19 @@ public class ParametrosTemperatura extends ParametrosControl implements Serializ
      */
     public void setBandaSuperior(double bandaSuperior) {
         this.bandaSuperior = bandaSuperior;
+    }
+
+    /**
+     * @return the controlIntercambiador
+     */
+    public boolean isControlIntercambiador() {
+        return controlIntercambiador;
+    }
+
+    /**
+     * @param controlIntercambiador the controlIntercambiador to set
+     */
+    public void setControlIntercambiador(boolean controlIntercambiador) {
+        this.controlIntercambiador = controlIntercambiador;
     }
 }

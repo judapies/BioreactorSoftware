@@ -625,6 +625,13 @@ public class InterfazFermentador extends javax.swing.JFrame {
                     com.views.Control.InicioControlOD.setText("Iniciar");
                     com.views.Control.InicioControlOD.setBackground(Color.GREEN);
                 }
+                if (bio.leerSalida(Bioreactor.Salida.VENTEO_CO2)==5) {
+                    com.views.Control.ValvulaCO2.setText("Desactivar");
+                    com.views.Control.ValvulaCO2.setBackground(Color.RED);
+                } else {
+                    com.views.Control.ValvulaCO2.setText("Activar");
+                    com.views.Control.ValvulaCO2.setBackground(Color.GREEN);
+                }
             }
         }
         jPanel1.setLayout(null);

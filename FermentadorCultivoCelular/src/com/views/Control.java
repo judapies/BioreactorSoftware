@@ -166,6 +166,7 @@ public class Control extends javax.swing.JPanel {
         SetPointOD2 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         InicioCO = new javax.swing.JButton();
+        ValvulaCO2 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1280, 800));
@@ -563,7 +564,16 @@ public class Control extends javax.swing.JPanel {
             }
         });
         jPanel1.add(InicioCO);
-        InicioCO.setBounds(235, 350, 90, 40);
+        InicioCO.setBounds(230, 360, 90, 40);
+
+        ValvulaCO2.setText("Activar");
+        ValvulaCO2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ValvulaCO2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(ValvulaCO2);
+        ValvulaCO2.setBounds(430, 490, 90, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -590,7 +600,7 @@ public class Control extends javax.swing.JPanel {
                     if ("Iniciar".equals(InicioControlTemperatura.getText())) {
                         //if (Variables.valorTemperatura > 0 && Variables.valorTemperatura < 200) {
                         if (bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) > 0 && bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) < 200) {
-                            if(bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1)>90.0 && bio.getParametros().getTemperatura().getSetpoint()<90.0){
+                            if (bio.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1) > 90.0 && bio.getParametros().getTemperatura().getSetpoint() < 90.0) {
                                 JOptionPane.showMessageDialog(this, "El enfriamiento iniciara cuando la tempertura disminuya de 90°C");
                             }
                             Variables.añadirEvento("Inicio Control de Temperatura Bioreactor " + bio.getId());
@@ -877,6 +887,30 @@ public class Control extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_InicioEsterilizacionActionPerformed
 
+    private void ValvulaCO2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValvulaCO2ActionPerformed
+        if (Variables.usuario != null) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    if (!bio.isEstadoControlEsterilizacion()) {
+                        if ("Desactivar".equals(ValvulaCO2.getText())) {
+                            bio.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
+                            ValvulaCO2.setText("Activar");
+                            ValvulaCO2.setBackground(Color.GREEN);
+                        } else {
+                            bio.activarSalida(Bioreactor.Salida.VENTEO_CO2, 5);
+                            ValvulaCO2.setText("Desactivar");
+                            ValvulaCO2.setBackground(Color.RED);
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Detenga la esterilización primero");
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe acceder con algun usuario");
+        }
+    }//GEN-LAST:event_ValvulaCO2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JButton InicioCO;
@@ -900,6 +934,7 @@ public class Control extends javax.swing.JPanel {
     public static javax.swing.JTextField SetPointTemperatura;
     public static javax.swing.JTextField SetPointTiempo;
     public static javax.swing.JTextField SetPointpH;
+    public static javax.swing.JButton ValvulaCO2;
     public static javax.swing.JButton botonNivelAlto;
     public static javax.swing.JButton botonNivelBajo;
     public static javax.swing.JButton botonNivelMedio;

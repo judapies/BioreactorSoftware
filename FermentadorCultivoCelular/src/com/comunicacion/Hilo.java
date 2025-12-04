@@ -126,7 +126,8 @@ public class Hilo implements Runnable {
                             controladorEsterilizacion.get(i).controlar();
                         }
                     } else {
-                        controladorEsterilizacion.get(i).cancelar();
+                        if(b.getParametros().getTemperatura().isControlIntercambiador())
+                            controladorEsterilizacion.get(i).cancelar();    
                         if (!b.isEstadoControlTemperatura()) {
                             controladorTemperatura.get(i).detenerResistencia();
                         }
@@ -220,9 +221,9 @@ public class Hilo implements Runnable {
                 System.out.println("Lectura Exitosa");
             }
         } else {
-            if (tiempoespera >= 20) {
+            if (tiempoespera >= 50) {
                 Variables.añadirEvento("Perdida de comunicación");
-                //JOptionPane.showMessageDialog(null, "No hay comunicación con Maestro\n Verifique el interruptor de Encendido", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No hay comunicación con Maestro\n Verifique el interruptor de Encendido", "Error", JOptionPane.ERROR_MESSAGE);
                 tiempoespera = 0;
             }
             tiempoespera++;

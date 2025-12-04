@@ -21,7 +21,7 @@ public class ControladorTemperatura {
 
     private int tiempoRecta;
     private int tiempoControl;
-    
+
     private double setpoint;
     private double histeresis;
     private double desvio;
@@ -37,24 +37,25 @@ public class ControladorTemperatura {
     private double potencia;
     private boolean calentar = true;
     private boolean mensaje = false;
-    private int y=0;
-    private double[]x=new double[2]; 
-    
-    long t1=0;
-    long t5=0;
+    private int y = 0;
+    private double[] x = new double[2];
+
+    long t1 = 0;
+    long t5 = 0;
 
     /**
      * Constructor del controlador de temperatura.
-     * 
-     * @param bioreactor instancia del biorreactor sobre el cual se aplicará el control
+     *
+     * @param bioreactor instancia del biorreactor sobre el cual se aplicará el
+     * control
      */
     public ControladorTemperatura(Bioreactor bioreactor) {
         this.bioreactor = bioreactor;
     }
 
     /**
-     * Controla el intercambiador de calor (agua), regulando la temperatura 
-     * mediante calentamiento o enfriamiento según la lógica ON/OFF y la 
+     * Controla el intercambiador de calor (agua), regulando la temperatura
+     * mediante calentamiento o enfriamiento según la lógica ON/OFF y la
      * disponibilidad de agua en el reservorio.
      */
     public void controlarIntercambiador() {
@@ -67,6 +68,7 @@ public class ControladorTemperatura {
 
         if (bioreactor.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) == 5) {//Reservorio  Lleno de agua
             if (calentar) {
+                bioreactor.detieneEnfriar();
                 bioreactor.recircularAgua();//Siempre debe estar recirculando agua
                 if (temperatura > setpoint + bandaSuperior) {
                     calentar = false;
@@ -76,9 +78,10 @@ public class ControladorTemperatura {
                     bioreactor.calentamientoAguaIntercambiador();
                 }
             } else {
-                if(temperatura<=90){
+                if (temperatura <= 90) {
                     bioreactor.enfriar();
                 }
+                bioreactor.detieneCalentamientoIntercambiador();
                 if (temperatura < setpoint + bandaInferior) {
                     calentar = true;
                 }
@@ -99,18 +102,18 @@ public class ControladorTemperatura {
     }
 
     /**
-     * Controla la resistencia eléctrica del biorreactor usando un control 
+     * Controla la resistencia eléctrica del biorreactor usando un control
      * proporcional con parámetros configurables:
-     * 
-     * - Error = Setpoint + Desvío - Temperatura.
-     * - Corrección de la ganancia en función de la pendiente de la temperatura.
-     * - Anti Wind-UP/DOWN para evitar saturación.
-     * 
+     *
+     * - Error = Setpoint + Desvío - Temperatura. - Corrección de la ganancia en
+     * función de la pendiente de la temperatura. - Anti Wind-UP/DOWN para
+     * evitar saturación.
+     *
      * Activa o desactiva la salida SSR en ciclos de tiempo definidos (Tciclo).
      */
     public void controlarResistencia() {
         double temperatura = bioreactor.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1);
-        double Temporal=0.0;
+        double Temporal = 0.0;
         setpoint = bioreactor.getParametros().getTemperatura().getSetpoint();
         desvio = bioreactor.getParametros().getTemperatura().getDesvio();
         histeresis = bioreactor.getParametros().getTemperatura().getHisteresis();
@@ -118,9 +121,9 @@ public class ControladorTemperatura {
         integral = bioreactor.getParametros().getTemperatura().getIntegral();
         ganancia = bioreactor.getParametros().getTemperatura().getGanancia2();
         Tciclo = bioreactor.getParametros().getTemperatura().getTCiclo();
-        
+
         t1 = System.currentTimeMillis();
-        
+
         if (!timer.isRunning()) {
             timer.setDelay(1000);
             timer.start();
@@ -147,11 +150,11 @@ public class ControladorTemperatura {
         }
 
         Temporal = error * ganancia;  // Control Proporcional.
-        if (Temporal > setpoint){ // Anti Wind-UP      
+        if (Temporal > setpoint) { // Anti Wind-UP      
             Temporal = setpoint;
         }
 
-        if (Temporal < 0.0){ // Anti Wind_DOWN                    
+        if (Temporal < 0.0) { // Anti Wind_DOWN                    
             Temporal = 0.0;
         }
 
@@ -164,7 +167,7 @@ public class ControladorTemperatura {
             //Hardware.Activar("Peltier-", false);
             bioreactor.activarSalida(Bioreactor.Salida.SSR, 10);
         }
-        
+
         if ((t1 - t5) >= Tciclo * 1000) {
             t5 = System.currentTimeMillis();
         }
@@ -178,33 +181,72 @@ public class ControladorTemperatura {
     public void detenerResistencia() {
         bioreactor.activarSalida(Bioreactor.Salida.SSR, 10);
     }
-    
+
     /**
-     * Actualiza la pendiente (aumento) de la temperatura en función de 
-     * las últimas dos lecturas. Esto se usa para ajustar dinámicamente la ganancia.
-     * 
+     * Controla el proceso de esterilización basado en temperatura, presión y
+     * tiempo.
+     *
+     * @return true si el ciclo de esterilización ha finalizado, false en otro
+     * caso
+     */
+    public boolean controlarVapor() {
+        double presion = bioreactor.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA);
+        double presionC = bioreactor.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA);
+        double temperatura = bioreactor.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1);
+        bandaInferior = bioreactor.getParametros().getTemperatura().getBandaInferior();
+        bandaSuperior = bioreactor.getParametros().getTemperatura().getBandaSuperior();
+
+        // Ecuación polinómica para estimar temperatura por presión
+        double p1 = 0.0000011617, p2 = -0.0010575, p3 = 0.44114, p4 = 65.043;
+        double Tpre = (Math.pow(presion, 3) * p1) + (Math.pow(presion, 2) * p2) + (presion * p3) + p4;
+
+        bioreactor.activarSalida(Bioreactor.Salida.DRENAJE, 5);
+
+        if (temperatura < setpoint) {
+            if (presion > 150) {
+                bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10);
+            } else if (presion <= 130) {
+                bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 5);
+            }
+            bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 10); // OFF
+        } else if (temperatura > setpoint + bandaSuperior) {
+            if (temperatura <= 90) {
+                bioreactor.enfriar();
+            }
+        }else{
+            bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 5); // OFF
+            bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10); // OFF
+            bioreactor.detieneEnfriar();
+        }
+        return false;
+    }
+
+    /**
+     * Actualiza la pendiente (aumento) de la temperatura en función de las
+     * últimas dos lecturas. Esto se usa para ajustar dinámicamente la ganancia.
+     *
      * @param temperatura temperatura actual
      */
-    public void actualizaRecta(double temperatura){
-        x[y]=temperatura;
+    public void actualizaRecta(double temperatura) {
+        x[y] = temperatura;
         y++;
-        if(y>=2){
-            y=0;
-            aumento=x[1]-x[0];
+        if (y >= 2) {
+            y = 0;
+            aumento = x[1] - x[0];
         }
     }
-    
+
     /**
-     * Timer encargado de actualizar contadores internos para el cálculo
-     * de rectas (pendiente) y tiempos de control.
+     * Timer encargado de actualizar contadores internos para el cálculo de
+     * rectas (pendiente) y tiempos de control.
      */
     @SuppressWarnings("StaticNonFinalUsedInInitialization")
-        public Timer timer = new Timer(20, new ActionListener() {
+    public Timer timer = new Timer(20, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent ae) {
             tiempoRecta++;
             tiempoControl++;
         }
-    }); 
+    });
 
 }

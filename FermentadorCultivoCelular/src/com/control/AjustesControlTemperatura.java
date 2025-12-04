@@ -42,6 +42,7 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                 textb.setText("" + bio.getParametros().getTemperatura().getBTem());
                 BandaInferior.setText("" + bio.getParametros().getTemperatura().getBandaInferior());
                 BandaSuperior.setText("" + bio.getParametros().getTemperatura().getBandaSuperior());
+                CheckBoxIntercambiador.setSelected(bio.getParametros().getTemperatura().isControlIntercambiador());
             }
         }
     }
@@ -85,6 +86,7 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
         BandaSuperior = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         BandaInferior = new javax.swing.JTextField();
+        CheckBoxIntercambiador = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("JP-Biolab  Fermentors & Bioreactors");
@@ -280,6 +282,15 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
             }
         });
 
+        CheckBoxIntercambiador.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        CheckBoxIntercambiador.setSelected(true);
+        CheckBoxIntercambiador.setText("Intercambiador?");
+        CheckBoxIntercambiador.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                CheckBoxIntercambiadorStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -344,7 +355,10 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel11)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(textPendiente, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(textPendiente, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(CheckBoxIntercambiador)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -385,7 +399,9 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
                             .addComponent(BandaSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(CheckBoxIntercambiador)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -417,7 +433,7 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Accept, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -456,6 +472,7 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                     bio.getParametros().getTemperatura().setBTem(Double.parseDouble(textb.getText()));
                     bio.getParametros().getTemperatura().setBandaInferior(Double.parseDouble(BandaInferior.getText()));
                     bio.getParametros().getTemperatura().setBandaSuperior(Double.parseDouble(BandaSuperior.getText()));
+                    bio.getParametros().getTemperatura().setControlIntercambiador(CheckBoxIntercambiador.isSelected());
                 }
             }
             dispose();
@@ -732,6 +749,10 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BandaInferiorFocusLost
 
+    private void CheckBoxIntercambiadorStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_CheckBoxIntercambiadorStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CheckBoxIntercambiadorStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -766,6 +787,7 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
     public static javax.swing.JTextField BandaInferior;
     public static javax.swing.JTextField BandaSuperior;
     private javax.swing.JButton Cancel;
+    private javax.swing.JCheckBox CheckBoxIntercambiador;
     public static javax.swing.JTextField Histeresis;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
