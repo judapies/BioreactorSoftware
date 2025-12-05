@@ -37,7 +37,7 @@ public class ControladorBombasPorReactor {
                     new EstadoGetter() {
                         @Override
                         public boolean get() {
-                            return bomba.isEstadoControl();
+                            return bomba.isEstadoControl();                            
                         }
                     },
                     new TiempoSupplier() {

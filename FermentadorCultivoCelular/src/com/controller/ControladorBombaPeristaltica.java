@@ -46,7 +46,7 @@ public class ControladorBombaPeristaltica {
 
     public void actualizar() {
         long tActual = System.currentTimeMillis();
-
+        
         if (estadoControl.get()) {
             if (!cicloIniciado) {
                 tInicio = tActual;
@@ -66,7 +66,7 @@ public class ControladorBombaPeristaltica {
                     callbackInicioDeCiclo.run();
                 }
             } else {
-                activador.accept(10);
+                activador.accept(10);                
                 if (!yaGuardado) {
                     callbackFinDeCiclo.run();
                     yaGuardado = true;
@@ -80,7 +80,7 @@ public class ControladorBombaPeristaltica {
             }
 
         } else {
-            activador.accept(10);
+            activador.accept(10);            
             if (!yaGuardado) {
                 callbackFinDeCiclo.run();
                 yaGuardado = true;

@@ -552,7 +552,7 @@ public class BombasPeristalticas extends javax.swing.JPanel {
     public void cambiaColor(JToggleButton b) {
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
-                if (b.isSelected()) {
+                if (b.getBackground().equals(Color.red)) {
                     b.setBackground(Color.green);
                     b.setOpaque(true);
                     for (int j = 0; j < bio.getBombasSize(); j++) {
@@ -561,7 +561,7 @@ public class BombasPeristalticas extends javax.swing.JPanel {
                             bio.getBomba(j).setRunBomba(true);
                             //Variables.estadoControlBomba1 = true;
                             //Variables.runBomba1 = true;
-                            Variables.añadirEvento("Activo modo manual Bomba peristaltica " + (j + 1) + " Bioreactor " + bio.getCapacidadLitros());
+                            Variables.añadirEvento("Activo modo manual Bomba peristaltica " + (j + 1) + " Bioreactor " + bio.getId());
                         }
                     }
                 } else {

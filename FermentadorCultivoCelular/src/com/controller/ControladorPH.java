@@ -37,8 +37,8 @@ public class ControladorPH {
 
             if (error > 0) {
                 if ("Ácido".equalsIgnoreCase(tipo) && encendida) {
-                    bomba.setEstadoControl(false);
-                    bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA" + (i + 1)), 10); // OFF
+                    bomba.setEstadoControl(false);                    
+                    bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
                 }
 
                 if ("Base".equalsIgnoreCase(tipo) && encendida) {
@@ -48,7 +48,7 @@ public class ControladorPH {
             } else {
                 if ("Base".equalsIgnoreCase(tipo) && encendida) {
                     bomba.setEstadoControl(false);
-                    bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA" + (i + 1)), 10); // OFF
+                    bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
                 }
 
                 if ("Ácido".equalsIgnoreCase(tipo) && encendida) {
@@ -67,9 +67,10 @@ public class ControladorPH {
             BombaPeristaltica bomba = bioreactor.getBomba(i);
             String tipo = bomba.getParametros().getAsignacionBomba(); // "Ácido" o "Base"
 
-            if (bomba.isEstadoControl() && (tipo.equalsIgnoreCase("Ácido") || tipo.equalsIgnoreCase("Base"))) {
-                bomba.setEstadoControl(false); // Desactiva modo automático
-                bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA" + (i + 1)), 10); // OFF
+            if (bomba.isEstadoOn() && (tipo.equalsIgnoreCase("Ácido") || tipo.equalsIgnoreCase("Base"))) {
+                //bomba.setEstadoOn(false); // Desactiva modo automático
+                bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
+                System.out.println("Apaga Bombas");
             }
         }
     }

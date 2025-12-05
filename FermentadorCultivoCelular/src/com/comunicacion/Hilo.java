@@ -91,7 +91,10 @@ public class Hilo implements Runnable {
                         controladorPH.get(i).detenerBombasPH();
                         controladoresBombas.get(i).actualizarTodas();
                     }
-
+                    
+                    //System.out.println(b.getId()+":"+b.getBomba(0).isEstadoControl());
+                    //System.out.println(b.getId()+":"+b.leerSalida(Bioreactor.Salida.BOMBA_PERISTALTICA_1));
+                    
                     if (b.isEstadoControlAgitacion()) {
                         controladorAgitacion.get(i).controlar();
                     } else {
@@ -195,12 +198,12 @@ public class Hilo implements Runnable {
                 if (imprime) {
                     System.out.println("Esperando Reactor " + b.getId());
                 }
-                tmp = iface.QRead(64, 10);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                tmp = iface.QRead(64, 10);
                 if (tiempoespera >= 50000) {
                     tiempoespera = 0;
                     break;

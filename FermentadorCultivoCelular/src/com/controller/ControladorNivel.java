@@ -27,30 +27,18 @@ public class ControladorNivel {
         for (int i = 0; i < bioreactor.getBombasSize(); i++) {
             BombaPeristaltica bomba = bioreactor.getBomba(i);
             String asignacion = bomba.getParametros().getAsignacionBomba(); // "Nivel Alto", "Nivel Medio", "Nivel Bajo"
-            boolean encendida = bomba.isEstadoOn();
-
-            if (!encendida) {
-                bomba.setEstadoControl(false);
-                continue;
-            }
-
             boolean activar = false;
 
-            if ("Nivel Alto".equalsIgnoreCase(asignacion)) {
-                activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 128;
-            } else if ("Nivel Medio".equalsIgnoreCase(asignacion)) {
-                activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 128;
-            } else if ("Nivel Bajo".equalsIgnoreCase(asignacion)) {
-                activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 128;
-            }
-
-            bomba.setEstadoControl(activar);
-
-            // Si el sensor no está activo, apagar salida
-            if (!activar) {
-                bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA" + (i + 1)), 10); // OFF
+            if (!bomba.isRunBomba() && bomba.isEstadoOn()) {//Si no activo la bomba de forma manual, ejecuta el control de nivel
+                if ("Nivel Alto".equalsIgnoreCase(asignacion)) {
+                    activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 60;
+                } else if ("Nivel Medio".equalsIgnoreCase(asignacion)) {
+                    activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 60;
+                } else if ("Nivel Bajo".equalsIgnoreCase(asignacion)) {
+                    activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 60;
+                }
+                bomba.setEstadoControl(activar);
             }
         }
     }
 }
-

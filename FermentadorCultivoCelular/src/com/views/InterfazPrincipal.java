@@ -775,6 +775,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private void IdentificarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IdentificarseActionPerformed
         if (abrir_clave == null || !abrir_clave.isDisplayable()) {
             abrir_clave = new com.keyboard.Password();
+            
         }
         abrir_clave.setVisible(true);
         com.keyboard.Password.jPasswordField1.setText(null);
