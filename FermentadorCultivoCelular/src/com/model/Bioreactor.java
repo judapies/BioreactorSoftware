@@ -230,8 +230,17 @@ public class Bioreactor implements IBioreactor, Serializable {
 
         double temp1 = data[1] + data[2] / 10.0;
         double temp2 = data[3] + data[4] / 10.0;
-        double ph = data[5] + data[6] / 100.0;
-        double od = data[7] + data[8] / 100.0;
+        
+        
+        //double ph = data[5] + data[6] / 100.0;
+        double ph_prev = (data[5] + (data[6]*256)) / 1000.0;
+        double ph=(parametros.getPh().getMPH()*ph_prev)+parametros.getPh().getBPH();
+        ph+=parametros.getPh().getOffset();
+        
+        //double od = data[7] + data[8] / 100.0;
+        double od_prev = (data[7] + (data[8]*256)) / 1000.0;
+        double od=(parametros.getOd().getMOD()*od_prev)+parametros.getOd().getBOD();
+        od+=parametros.getOd().getOffset();
 
         int rpmCH1 = ((data[10] & 0xFF) << 8) | (data[9] & 0xFF);
         int rpmCH2 = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
@@ -278,7 +287,6 @@ public class Bioreactor implements IBioreactor, Serializable {
         activarSalida(Salida.SUMINISTRO_AGUA_ENFRIAMIENTO, OFF);
         activarSalida(Salida.SALIDA_AGUA_ENFRIAMIENTO, OFF);
         activarSalida(Salida.BOMBA_RECIRCULACION, OFF);
-        activarSalida(Salida.INGRESO_CO2, OFF);
         activarSalida(Salida.VENTEO_CO2, OFF);
         activarSalida(Salida.DESFOGUE_VAPOR, ON);
     }
@@ -298,7 +306,6 @@ public class Bioreactor implements IBioreactor, Serializable {
         activarSalida(Salida.SUMINISTRO_AGUA_ENFRIAMIENTO, ON);
         activarSalida(Salida.SALIDA_AGUA_ENFRIAMIENTO, ON);
         activarSalida(Salida.BOMBA_RECIRCULACION, OFF);
-        activarSalida(Salida.INGRESO_CO2, OFF);
         activarSalida(Salida.VENTEO_CO2, OFF);
         activarSalida(Salida.DESFOGUE_VAPOR, OFF);
     }
@@ -318,7 +325,6 @@ public class Bioreactor implements IBioreactor, Serializable {
         activarSalida(Salida.SUMINISTRO_AGUA_ENFRIAMIENTO, OFF);
         activarSalida(Salida.SALIDA_AGUA_ENFRIAMIENTO, OFF);
         activarSalida(Salida.BOMBA_RECIRCULACION, OFF);
-        activarSalida(Salida.INGRESO_CO2, OFF);
         activarSalida(Salida.VENTEO_CO2, OFF);
         activarSalida(Salida.DESFOGUE_VAPOR, OFF);
     }

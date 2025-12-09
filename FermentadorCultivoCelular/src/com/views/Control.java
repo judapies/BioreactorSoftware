@@ -39,6 +39,7 @@ public class Control extends javax.swing.JPanel {
         InicioControlTemperatura.setBackground(Color.GREEN);
         InicioControlpH.setBackground(Color.GREEN);
         InicioControlOD.setBackground(Color.GREEN);
+        ValvulaCO2.setBackground(Color.GREEN);
         //InicioTiempo.setBackground(Color.GREEN);
         // BotonBomba.setBackground(Color.LIGHT_GRAY);                        
         AjustesOD.jComboBox1.setSelectedIndex(Variables.tipogas);
@@ -893,11 +894,11 @@ public class Control extends javax.swing.JPanel {
                 if (Variables.idBioreactor == bio.getId()) {
                     if (!bio.isEstadoControlEsterilizacion()) {
                         if ("Desactivar".equals(ValvulaCO2.getText())) {
-                            bio.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
+                            bio.activarSalida(Bioreactor.Salida.INGRESO_CO2, 10);
                             ValvulaCO2.setText("Activar");
                             ValvulaCO2.setBackground(Color.GREEN);
                         } else {
-                            bio.activarSalida(Bioreactor.Salida.VENTEO_CO2, 5);
+                            bio.activarSalida(Bioreactor.Salida.INGRESO_CO2, 5);
                             ValvulaCO2.setText("Desactivar");
                             ValvulaCO2.setBackground(Color.RED);
                         }

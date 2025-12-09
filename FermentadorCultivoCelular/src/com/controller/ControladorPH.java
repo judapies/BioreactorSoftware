@@ -35,14 +35,14 @@ public class ControladorPH {
             String tipo = bomba.getParametros().getAsignacionBomba(); // "Ácido" o "Base"
             boolean encendida = bomba.isEstadoOn();
 
-            if (error > 0) {
-                if ("Ácido".equalsIgnoreCase(tipo) && encendida) {
-                    bomba.setEstadoControl(false);                    
+            if (error < 0) {
+                if ("Acido".equalsIgnoreCase(tipo) && encendida) {
+                    bomba.setEstadoControl(false);
                     bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
                 }
 
-                if ("Base".equalsIgnoreCase(tipo) && encendida) {
-                    bomba.setEstadoControl(Math.abs(error) > banda);
+                if ("Base".equalsIgnoreCase(tipo) && encendida) {                    
+                    bomba.setEstadoControl(Math.abs(error) > banda);                        
                 }
 
             } else {
@@ -51,7 +51,7 @@ public class ControladorPH {
                     bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
                 }
 
-                if ("Ácido".equalsIgnoreCase(tipo) && encendida) {
+                if ("Acido".equalsIgnoreCase(tipo) && encendida) {                    
                     bomba.setEstadoControl(Math.abs(error) > banda);
                 }
             }
@@ -67,8 +67,8 @@ public class ControladorPH {
             BombaPeristaltica bomba = bioreactor.getBomba(i);
             String tipo = bomba.getParametros().getAsignacionBomba(); // "Ácido" o "Base"
 
-            if (bomba.isEstadoOn() && (tipo.equalsIgnoreCase("Ácido") || tipo.equalsIgnoreCase("Base"))) {
-                //bomba.setEstadoOn(false); // Desactiva modo automático
+            if (bomba.isEstadoOn() && (tipo.equalsIgnoreCase("Acido") || tipo.equalsIgnoreCase("Base"))) {
+                bomba.setEstadoControl(false); // Desactiva modo automático
                 bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
                 System.out.println("Apaga Bombas");
             }

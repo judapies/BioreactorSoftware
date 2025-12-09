@@ -67,8 +67,8 @@ public class Hilo implements Runnable {
             for (int i = 0; i < Variables.bioreactores.size(); i++) {
                 Bioreactor b = Variables.bioreactores.get(i);
                 try {
-                    //simulaLecturas();
-                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
+                    simulaLecturas();
+                    //b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
                 } catch (Exception e) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, "Error en establecer Comunicacion", e);
                     JOptionPane.showMessageDialog(null,
@@ -87,14 +87,12 @@ public class Hilo implements Runnable {
 
                     if (b.isEstadoControlpH()) {
                         controladorPH.get(i).controlar();
+                        controladoresBombas.get(i).actualizarTodas();
                     } else {
                         controladorPH.get(i).detenerBombasPH();
                         controladoresBombas.get(i).actualizarTodas();
                     }
-                    
-                    //System.out.println(b.getId()+":"+b.getBomba(0).isEstadoControl());
-                    //System.out.println(b.getId()+":"+b.leerSalida(Bioreactor.Salida.BOMBA_PERISTALTICA_1));
-                    
+                                        
                     if (b.isEstadoControlAgitacion()) {
                         controladorAgitacion.get(i).controlar();
                     } else {
@@ -137,7 +135,7 @@ public class Hilo implements Runnable {
                     }
                 }
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(250);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -252,6 +250,7 @@ public class Hilo implements Runnable {
             }
         }
         bio1.actualizarEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1, 5);
+        bio1.actualizarEntrada(Bioreactor.Entrada.PH, 7.1);
         if (bio1.isEstadoControlTemperatura()) {
             if (bio1.leerSalida(Bioreactor.Salida.ENTRADA_INTERCAMBIADOR) == 5) {
                 bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura += 1.1);

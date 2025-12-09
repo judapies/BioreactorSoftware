@@ -32,12 +32,14 @@ public class ControladorNivel {
             if (!bomba.isRunBomba() && bomba.isEstadoOn()) {//Si no activo la bomba de forma manual, ejecuta el control de nivel
                 if ("Nivel Alto".equalsIgnoreCase(asignacion)) {
                     activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_ALTO) < 60;
+                    bomba.setEstadoControl(activar);
                 } else if ("Nivel Medio".equalsIgnoreCase(asignacion)) {
                     activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_MEDIO) < 60;
+                    bomba.setEstadoControl(activar);
                 } else if ("Nivel Bajo".equalsIgnoreCase(asignacion)) {
                     activar = bioreactor.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 60;
+                    bomba.setEstadoControl(activar);
                 }
-                bomba.setEstadoControl(activar);
             }
         }
     }
