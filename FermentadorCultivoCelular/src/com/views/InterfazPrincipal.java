@@ -63,7 +63,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         this.setLayout(null);
         setLocationRelativeTo(null);
         abrir_clave = new com.keyboard.Password();
-        jPanel1.setBackground(Color.WHITE);        
+        jPanel1.setBackground(Color.WHITE);
         jPanel1.setLayout(null);
         new Thread(new Hilo()).start();
         Imagen Imagen1 = new Imagen();
@@ -118,7 +118,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             Variables.bioreactores = new ArrayList<>();
         }
         for (int i = 101; i < 104; i++) {
-        //for (int i = 101; i < 102; i++) {//Modificado para prueba con solo un esclavo-26/11/2025
+            //for (int i = 101; i < 102; i++) {//Modificado para prueba con solo un esclavo-26/11/2025
             File f = new File("bioreactor_config_" + i + ".dat");
             if (f.exists()) {
                 try {
@@ -146,6 +146,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             System.out.println(bio.getBomba(0).getPorcentajeDuty());
             System.out.println(bio.getBomba(0).getTiempoEncendidoSegundos());
             System.out.println(bio.getBomba(0).getParametros().getAsignacionBomba());
+            System.out.println("Banda:"+bio.getParametros().getPh().getBanda());
         }
         AbreConfig();
     }
@@ -736,23 +737,21 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     @SuppressWarnings("static-access")
     private void AjusteControlpHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AjusteControlpHActionPerformed
-        if (abrir_clave == null || !abrir_clave.isDisplayable()) {
-            abrir_clave = new com.keyboard.Password();
+        try { 
+            Runtime.getRuntime().exec("ArcAir.exe");
+        } catch (IOException ex) {
+            Logger.getLogger(InterfazPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex, "Error", JOptionPane.ERROR_MESSAGE);
         }
-        abrir_clave.setVisible(true);
-        com.keyboard.Password.jPasswordField1.setText(null);
-        com.keyboard.Password.jTextField1.setText(null);
-        Variables.ajustepH = true;
     }//GEN-LAST:event_AjusteControlpHActionPerformed
 
     private void AjusteControlODActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AjusteControlODActionPerformed
-        if (abrir_clave == null || !abrir_clave.isDisplayable()) {
-            abrir_clave = new com.keyboard.Password();
+        try { 
+            Runtime.getRuntime().exec("ArcAir.exe");
+        } catch (IOException ex) {
+            Logger.getLogger(InterfazPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex, "Error", JOptionPane.ERROR_MESSAGE);
         }
-        abrir_clave.setVisible(true);
-        com.keyboard.Password.jPasswordField1.setText(null);
-        com.keyboard.Password.jTextField1.setText(null);
-        Variables.ajusteOD = true;
     }//GEN-LAST:event_AjusteControlODActionPerformed
 
     private void infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoActionPerformed
@@ -775,11 +774,12 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private void IdentificarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IdentificarseActionPerformed
         if (abrir_clave == null || !abrir_clave.isDisplayable()) {
             abrir_clave = new com.keyboard.Password();
-            
         }
-        abrir_clave.setVisible(true);
-        com.keyboard.Password.jPasswordField1.setText(null);
-        com.keyboard.Password.jTextField1.setText(null);
+        if (!abrir_clave.isVisible()) {
+            abrir_clave.setVisible(true);
+            com.keyboard.Password.jPasswordField1.setText(null);
+            com.keyboard.Password.jTextField1.setText(null);
+        }
     }//GEN-LAST:event_IdentificarseActionPerformed
 
     private void CrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearUsuarioActionPerformed

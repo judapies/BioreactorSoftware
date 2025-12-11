@@ -45,6 +45,7 @@ public class Hilo implements Runnable {
     List<ControladorTemperatura> controladorTemperatura = new ArrayList<>();
 
     int presionPreCamara = 0;
+    int presionCamara = 0;
     double temperatura = 10;
     boolean inicio = false;
 
@@ -92,7 +93,7 @@ public class Hilo implements Runnable {
                         controladorPH.get(i).detenerBombasPH();
                         controladoresBombas.get(i).actualizarTodas();
                     }
-                                        
+
                     if (b.isEstadoControlAgitacion()) {
                         controladorAgitacion.get(i).controlar();
                     } else {
@@ -103,10 +104,20 @@ public class Hilo implements Runnable {
                         if (b.getCapacidadLitros() < 3) {
                             controladorTemperatura.get(i).controlarResistencia();
                         } else {
-                            controladorTemperatura.get(i).controlarIntercambiador();
+                            if (b.getParametros().getTemperatura().isControlIntercambiador()) {
+                                controladorTemperatura.get(i).controlarIntercambiador();
+                            }else{
+                                controladorTemperatura.get(i).controlarVapor();
+                            }
                         }
                     } else {
-                        controladorTemperatura.get(i).detenerIntercambiador();
+                        if (b.getParametros().getTemperatura().isControlIntercambiador()) {
+                            controladorTemperatura.get(i).detenerIntercambiador();
+                        }else{
+                            if (!b.isEstadoControlEsterilizacion()) {
+                                controladorTemperatura.get(i).cancelar();
+                            }
+                        }
                         if (!b.isEstadoControlEsterilizacion()) {
                             controladorTemperatura.get(i).detenerResistencia();
                         }
@@ -127,15 +138,16 @@ public class Hilo implements Runnable {
                             controladorEsterilizacion.get(i).controlar();
                         }
                     } else {
-                        if(b.getParametros().getTemperatura().isControlIntercambiador())
-                            controladorEsterilizacion.get(i).cancelar();    
+                        if (b.getParametros().getTemperatura().isControlIntercambiador()) {
+                            controladorEsterilizacion.get(i).cancelar();
+                        }
                         if (!b.isEstadoControlTemperatura()) {
                             controladorTemperatura.get(i).detenerResistencia();
                         }
                     }
                 }
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(50);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -241,6 +253,20 @@ public class Hilo implements Runnable {
 
         Variables.valorTemperatura += 0.1;
         Bioreactor bio1 = Variables.bioreactores.get(1);
+
+        if (bio1.isEstadoControlCO2()) {
+            if(presionCamara>=bio1.getParametros().getCO2().getSetpoint()+30){
+                bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara--);
+            }else if(presionCamara<bio1.getParametros().getCO2().getSetpoint()-bio1.getParametros().getCO2().getHisteresis()){
+                bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara++);
+            }else{
+                bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara++);
+            }
+        } else {
+            if (presionCamara >= 0) {
+                bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara--);
+            }
+        }
 
         if (bio1.leerSalida(Bioreactor.Salida.SUMINISTRO_VAPOR) == 5) {
             bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA, presionPreCamara++);

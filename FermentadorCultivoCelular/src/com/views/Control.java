@@ -43,15 +43,15 @@ public class Control extends javax.swing.JPanel {
         //InicioTiempo.setBackground(Color.GREEN);
         // BotonBomba.setBackground(Color.LIGHT_GRAY);                        
         AjustesOD.jComboBox1.setSelectedIndex(Variables.tipogas);
-        double initial = 0.5, min = 0.1, max = 1.0, increment = 0.1;
+        double initial=0;
+        for (Bioreactor bio : Variables.bioreactores) {
+            if (Variables.idBioreactor == bio.getId()) {
+                initial = bio.getParametros().getPh().getBanda();
+            }
+        }
+        double min = 0.1, max = 1.0, increment = 0.1;
         SpinnerNumberModel model = new SpinnerNumberModel(initial, min, max, increment);
         AjustespH.DeadBand.setModel(model);
-        initial = 1.0;
-        min = 1.0;
-        max = 20.0;
-        increment = 1.0;
-        SpinnerNumberModel model2 = new SpinnerNumberModel(initial, min, max, increment);
-
     }
 
     public static int setpointtemperatura = 0, setpointph = 0, setpointod = 0, setpointco2 = 0, setpointagitador = 0, setpointTiempo = 0, setpointEsterilizacion = 0;
@@ -168,6 +168,10 @@ public class Control extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         InicioCO = new javax.swing.JButton();
         ValvulaCO2 = new javax.swing.JButton();
+        jLabel50 = new javax.swing.JLabel();
+        jLabel51 = new javax.swing.JLabel();
+        jLabel53 = new javax.swing.JLabel();
+        jLabel55 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1280, 800));
@@ -372,7 +376,7 @@ public class Control extends javax.swing.JPanel {
             }
         });
         jPanel1.add(SetPointHisteresis);
-        SetPointHisteresis.setBounds(220, 420, 108, 34);
+        SetPointHisteresis.setBounds(220, 420, 100, 34);
 
         jLabel38.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel38.setText("%");
@@ -396,7 +400,7 @@ public class Control extends javax.swing.JPanel {
             }
         });
         jPanel1.add(SetPointEsterilizacion);
-        SetPointEsterilizacion.setBounds(100, 160, 100, 34);
+        SetPointEsterilizacion.setBounds(100, 160, 90, 34);
 
         InicioEsterilizacion.setText("Iniciar");
         InicioEsterilizacion.addActionListener(new java.awt.event.ActionListener() {
@@ -410,7 +414,7 @@ public class Control extends javax.swing.JPanel {
         jLabel40.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel40.setText("PRESION");
         jPanel1.add(jLabel40);
-        jLabel40.setBounds(120, 400, 55, 15);
+        jLabel40.setBounds(110, 400, 55, 15);
 
         jLabel41.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel41.setText("HISTERESIS");
@@ -435,7 +439,7 @@ public class Control extends javax.swing.JPanel {
             }
         });
         jPanel1.add(SetPointTiempo);
-        SetPointTiempo.setBounds(220, 160, 108, 34);
+        SetPointTiempo.setBounds(210, 160, 90, 34);
 
         PointValueTiempoEsterilizacion.setEditable(false);
         PointValueTiempoEsterilizacion.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -443,7 +447,7 @@ public class Control extends javax.swing.JPanel {
         PointValueTiempoEsterilizacion.setText("0.0");
         PointValueTiempoEsterilizacion.setFocusable(false);
         jPanel1.add(PointValueTiempoEsterilizacion);
-        PointValueTiempoEsterilizacion.setBounds(220, 200, 108, 34);
+        PointValueTiempoEsterilizacion.setBounds(210, 200, 90, 34);
 
         jLabel43.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel43.setText("TEMPERATURA");
@@ -464,7 +468,7 @@ public class Control extends javax.swing.JPanel {
         PointValueEsterilizacion.setText("0.0");
         PointValueEsterilizacion.setFocusable(false);
         jPanel1.add(PointValueEsterilizacion);
-        PointValueEsterilizacion.setBounds(100, 200, 100, 34);
+        PointValueEsterilizacion.setBounds(100, 200, 90, 34);
 
         jLabel39.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel39.setText("SP");
@@ -494,7 +498,7 @@ public class Control extends javax.swing.JPanel {
         jLabel48.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         jLabel48.setText("TIEMPO");
         jPanel1.add(jLabel48);
-        jLabel48.setBounds(250, 130, 50, 15);
+        jLabel48.setBounds(230, 130, 50, 15);
 
         pointValuePresionCamara.setFont(new java.awt.Font("Bahnschrift", 0, 20)); // NOI18N
         pointValuePresionCamara.setText("0.0");
@@ -517,9 +521,9 @@ public class Control extends javax.swing.JPanel {
         jLabel54.setBounds(760, 170, 50, 10);
 
         jLabel49.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
-        jLabel49.setText("CÁMARA");
+        jLabel49.setText("kPa");
         jPanel1.add(jLabel49);
-        jLabel49.setBounds(520, 190, 80, 20);
+        jLabel49.setBounds(190, 430, 40, 20);
 
         SetPointPresion.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         SetPointPresion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -533,7 +537,7 @@ public class Control extends javax.swing.JPanel {
             }
         });
         jPanel1.add(SetPointPresion);
-        SetPointPresion.setBounds(90, 420, 108, 34);
+        SetPointPresion.setBounds(80, 420, 108, 34);
 
         SetPointOD2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         SetPointOD2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -567,7 +571,7 @@ public class Control extends javax.swing.JPanel {
         jPanel1.add(InicioCO);
         InicioCO.setBounds(230, 360, 90, 40);
 
-        ValvulaCO2.setText("Activar");
+        ValvulaCO2.setText("Abrir CO2");
         ValvulaCO2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ValvulaCO2ActionPerformed(evt);
@@ -575,6 +579,26 @@ public class Control extends javax.swing.JPanel {
         });
         jPanel1.add(ValvulaCO2);
         ValvulaCO2.setBounds(430, 490, 90, 40);
+
+        jLabel50.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        jLabel50.setText("CÁMARA");
+        jPanel1.add(jLabel50);
+        jLabel50.setBounds(520, 190, 80, 20);
+
+        jLabel51.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        jLabel51.setText("MIN");
+        jPanel1.add(jLabel51);
+        jLabel51.setBounds(300, 170, 40, 20);
+
+        jLabel53.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        jLabel53.setText("MIN:SS");
+        jPanel1.add(jLabel53);
+        jLabel53.setBounds(300, 210, 50, 20);
+
+        jLabel55.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        jLabel55.setText("kPa");
+        jPanel1.add(jLabel55);
+        jLabel55.setBounds(320, 430, 30, 20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -893,13 +917,13 @@ public class Control extends javax.swing.JPanel {
             for (Bioreactor bio : Variables.bioreactores) {
                 if (Variables.idBioreactor == bio.getId()) {
                     if (!bio.isEstadoControlEsterilizacion()) {
-                        if ("Desactivar".equals(ValvulaCO2.getText())) {
+                        if ("Cerrar CO2".equals(ValvulaCO2.getText())) {
                             bio.activarSalida(Bioreactor.Salida.INGRESO_CO2, 10);
-                            ValvulaCO2.setText("Activar");
+                            ValvulaCO2.setText("Abrir CO2");
                             ValvulaCO2.setBackground(Color.GREEN);
                         } else {
                             bio.activarSalida(Bioreactor.Salida.INGRESO_CO2, 5);
-                            ValvulaCO2.setText("Desactivar");
+                            ValvulaCO2.setText("Cerrar CO2");
                             ValvulaCO2.setBackground(Color.RED);
                         }
                     }else{
@@ -965,8 +989,12 @@ public class Control extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel9;
     public static javax.swing.JPanel jPanel1;
     public static javax.swing.JLabel pointValuePresionCamara;

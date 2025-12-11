@@ -188,9 +188,6 @@ public class InterfazFermentador extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         AjustePresion = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JPopupMenu.Separator();
-        Fermentador = new javax.swing.JMenuItem();
-        jSeparator10 = new javax.swing.JPopupMenu.Separator();
-        jSeparator11 = new javax.swing.JPopupMenu.Separator();
         jMenu4 = new javax.swing.JMenu();
         info = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
@@ -429,17 +426,6 @@ public class InterfazFermentador extends javax.swing.JFrame {
         });
         jMenu2.add(AjustePresion);
         jMenu2.add(jSeparator14);
-
-        Fermentador.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        Fermentador.setText("Seleccione Biorreactor");
-        Fermentador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FermentadorActionPerformed(evt);
-            }
-        });
-        jMenu2.add(Fermentador);
-        jMenu2.add(jSeparator10);
-        jMenu2.add(jSeparator11);
 
         jMenuBar1.add(jMenu2);
 
@@ -776,18 +762,6 @@ public class InterfazFermentador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_AjusteEsterilizacionActionPerformed
 
-    private void FermentadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FermentadorActionPerformed
-        Variables.bioreactor = (String) JOptionPane.showInputDialog(null, "Seleccione el ID del Biorreactor", "ID del Biorreactor", JOptionPane.QUESTION_MESSAGE, null, new Object[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32"}, "Seleccione");
-        if (Variables.bioreactor == null) {
-            Variables.bioreactor = "1";
-        }
-
-        Variables.idBioreactor = Integer.parseInt(Variables.bioreactor);
-        if (Variables.idBioreactor > 1) {
-            JOptionPane.showMessageDialog(null, "No encontrado", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_FermentadorActionPerformed
-
     private void AjustePresionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AjustePresionActionPerformed
         if (abrir_clave == null || !abrir_clave.isDisplayable()) {
             abrir_clave = new com.keyboard.Password();
@@ -829,7 +803,6 @@ public class InterfazFermentador extends javax.swing.JFrame {
     private javax.swing.JButton BombasPeristalticas;
     private javax.swing.JButton Control;
     private javax.swing.JMenuItem Eventos;
-    private javax.swing.JMenuItem Fermentador;
     public static javax.swing.JMenu Hora;
     private javax.swing.JButton Monitor;
     private javax.swing.JButton Off;
@@ -845,8 +818,6 @@ public class InterfazFermentador extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator10;
-    private javax.swing.JPopupMenu.Separator jSeparator11;
     private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JPopupMenu.Separator jSeparator13;
     private javax.swing.JPopupMenu.Separator jSeparator14;

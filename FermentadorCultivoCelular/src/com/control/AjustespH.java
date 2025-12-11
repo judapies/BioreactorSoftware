@@ -9,6 +9,7 @@ import com.keyboard.JNumBoardPane;
 import com.model.Bioreactor;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -33,6 +34,8 @@ public class AjustespH extends javax.swing.JFrame {
                 jTextField2.setText("" + bio.getParametros().getPh().getAlpha());
                 textPendiente.setText("" + bio.getParametros().getPh().getMPH());
                 textb.setText("" + bio.getParametros().getPh().getBPH());
+                System.out.println("Banda:"+bio.getParametros().getPh().getBanda());
+                DeadBand.setValue(bio.getParametros().getPh().getBanda());
                 jCheckBox1.setSelected(Variables.modbuspH);
             }
         }
@@ -117,6 +120,7 @@ public class AjustespH extends javax.swing.JFrame {
         jLabel1.setText("Offset:");
 
         DeadBand.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        DeadBand.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         DeadBand.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 DeadBandStateChanged(evt);

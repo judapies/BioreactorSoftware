@@ -70,7 +70,6 @@ public class ControladorPH {
             if (bomba.isEstadoOn() && (tipo.equalsIgnoreCase("Acido") || tipo.equalsIgnoreCase("Base"))) {
                 bomba.setEstadoControl(false); // Desactiva modo automático
                 bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
-                System.out.println("Apaga Bombas");
             }
         }
     }

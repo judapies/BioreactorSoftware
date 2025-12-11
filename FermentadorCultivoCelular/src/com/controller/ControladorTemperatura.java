@@ -9,6 +9,7 @@ package com.controller;
  *
  * @author PC
  */
+import com.control.Variables;
 import com.model.Bioreactor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -219,6 +220,16 @@ public class ControladorTemperatura {
             bioreactor.detieneEnfriar();
         }
         return false;
+    }
+    
+    /**
+     * Cancela el proceso actual de esterilización,
+     * apagando todas las salidas relacionadas.
+     */
+    public void cancelar() {
+        bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10);
+        bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 10);
+        bioreactor.activarSalida(Bioreactor.Salida.DRENAJE, 10);
     }
 
     /**
