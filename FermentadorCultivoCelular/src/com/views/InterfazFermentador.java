@@ -692,7 +692,7 @@ public class InterfazFermentador extends javax.swing.JFrame {
 
         if (modeloActual != null) {
             tabla2.setModel(modeloActual);
-            modelo2 = modeloActual; 
+            modelo2 = modeloActual;
         }
 
         if (chartActual != null) {
@@ -701,7 +701,21 @@ public class InterfazFermentador extends javax.swing.JFrame {
             com.views.Monitor.Grafica.revalidate();
             com.views.Monitor.Grafica.repaint();
         }
-        com.views.Monitor.jSpinner1.setValue(Variables.TMuestreo / 1000);
+        //com.views.Monitor.jSpinner1.setValue(Variables.TMuestreo / 1000);
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
+            }
+        }
+
+        int tmMs = 1000;
+        if (bioActual != null) {
+            tmMs = bioActual.getTiempoMuestreoMs();
+        }
+        int tmSegundos = Math.max(1, tmMs / 1000);
+        com.views.Monitor.jSpinner1.setValue(tmSegundos);
         //new TecladoVirtual.Teclados( this, true).setVisible(true);
     }//GEN-LAST:event_MonitorActionPerformed
 

@@ -129,6 +129,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             bio.setEstadoControlOD(false);
             bio.setEstadoControlTemperatura(false);
             bio.setEstadoControlpH(false);
+            bio.setEstadoAdquisicion(false);
             System.out.println(bio.getId());
             System.out.println(bio.getCapacidadLitros());
             System.out.println(bio.getBomba(0).getPorcentajeDuty());

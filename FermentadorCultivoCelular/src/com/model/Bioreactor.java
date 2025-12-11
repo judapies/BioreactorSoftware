@@ -247,6 +247,7 @@ public class Bioreactor implements IBioreactor, Serializable {
         }
 
         double temp1 = data[1] + data[2] / 10.0;
+        temp1+=parametros.getTemperatura().getOffset();
         double temp2 = data[3] + data[4] / 10.0;
 
         //double ph = data[5] + data[6] / 100.0;
@@ -260,10 +261,14 @@ public class Bioreactor implements IBioreactor, Serializable {
         od += parametros.getOd().getOffset();
 
         int rpmCH1 = ((data[10] & 0xFF) << 8) | (data[9] & 0xFF);
+        rpmCH1*=parametros.getAgitacion().getOffset();
         int rpmCH2 = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
+        rpmCH2*=parametros.getAgitacion().getOffset();
 
         int presionCamara = ((data[14] & 0xFF) << 8) | (data[13] & 0xFF);
+        presionCamara+=parametros.getPresion().getAjustePresionCamara();
         int presionPreCamara = ((data[16] & 0xFF) << 8) | (data[15] & 0xFF);
+        presionPreCamara+=parametros.getPresion().getAjustePresionPreCamara();
 
         double co2 = data[20] + data[21] / 1000.0;
 

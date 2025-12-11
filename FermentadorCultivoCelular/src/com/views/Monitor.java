@@ -44,7 +44,7 @@ public class Monitor extends javax.swing.JPanel {
         if (Variables.SelecSegundos) {
             Segundos.setSelected(true);
         }
-        jSpinner1.setValue(Variables.TMuestreo / 1000);
+        //jSpinner1.setValue(Variables.TMuestreo / 1000);
         int initial = 1, min = 1, max = 30, increment = 1;
         SpinnerNumberModel model = new SpinnerNumberModel(initial, min, max, increment);
         jSpinner1.setModel(model);
@@ -56,6 +56,13 @@ public class Monitor extends javax.swing.JPanel {
                 break;
             }
         }
+
+        int tmMs = 1000;
+        if (bioActual != null) {
+            tmMs = bioActual.getTiempoMuestreoMs();
+        }
+        int tmSegundos = Math.max(1, tmMs / 1000);
+        jSpinner1.setValue(tmSegundos);
 
         if (bioActual != null && bioActual.isEstadoAdquisicion()) {
             jButton1.setText("Detener Adquisición");
@@ -335,19 +342,27 @@ public class Monitor extends javax.swing.JPanel {
 
         if (!adquiriendoEste) {
             Variables.añadirEvento("Inicio Adquisición de Datos Bio " + bioActual.getId());
-
+            int tmMs;
             if (Segundos.isSelected()) {
-                Variables.TMuestreo = (int) jSpinner1.getValue() * 1000;
+                tmMs = (int) jSpinner1.getValue() * 1000;
                 Variables.SelecSegundos = true;
                 Variables.SelecMinutos = false;
             } else if (Minutos.isSelected()) {
-                Variables.TMuestreo = (int) jSpinner1.getValue() * 1000;
-                Variables.TMuestreo = Variables.TMuestreo * 60;
+                tmMs = (int) jSpinner1.getValue() * 1000 * 60;
                 Variables.SelecMinutos = true;
                 Variables.SelecSegundos = false;
+            } else {
+                tmMs = (int) jSpinner1.getValue() * 1000;
             }
 
+            if (tmMs <= 0) {
+                tmMs = 1000;
+            }
+
+            bioActual.setTiempoMuestreoMs(tmMs);
+            bioActual.setProximoMuestreoMs(System.currentTimeMillis());
             bioActual.setEstadoAdquisicion(true);
+
             if (!Variables.estadoAdquisicion) {
                 Variables.estadoAdquisicion = true;
                 new Thread(new HiloGrafica()).start();
@@ -356,6 +371,7 @@ public class Monitor extends javax.swing.JPanel {
         } else {
             Variables.añadirEvento("Detuvo Adquisición de Datos Bio " + bioActual.getId());
             bioActual.setEstadoAdquisicion(false);
+            bioActual.setProximoMuestreoMs(0);
             boolean algunActivo = false;
             for (Bioreactor b : Variables.bioreactores) {
                 if (b.isEstadoAdquisicion()) {
