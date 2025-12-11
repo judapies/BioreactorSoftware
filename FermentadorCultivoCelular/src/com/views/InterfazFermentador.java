@@ -6,6 +6,8 @@
 package com.views;
 
 import com.control.Variables;
+import com.graphs.BioreactorChart;
+import com.graphs.BioreactorUIState;
 import com.graphs.Graficar;
 import com.keyboard.JNumBoardPane;
 import com.keyboard.Password;
@@ -19,6 +21,8 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -36,15 +40,10 @@ public class InterfazFermentador extends javax.swing.JFrame {
     private static final long serialVersionUID = 01;
     public static DefaultTableModel modelo;
     public static DefaultTableModel modelo2;
+    public static java.util.Map<Integer, com.graphs.BioreactorChart> chartsPorBioreactor = new java.util.HashMap<Integer, com.graphs.BioreactorChart>();
+    public static java.util.Map<Integer, javax.swing.table.DefaultTableModel> modelosPorBioreactor = new java.util.HashMap<Integer, javax.swing.table.DefaultTableModel>();
+
     public static Recetas cascada;
-    private int seleccion = 0;
-    private int liAgit = 0;
-    private int lsAgit = 0;
-    private int liAire = 0;
-    private int lsAire = 0;
-    private int liO2 = 0;
-    private int lsO2 = 0;
-    private int tiempo = 0;
     public static BombasPeristalticas bombas;
     Control controla;
     Monitor monitor;
@@ -54,6 +53,7 @@ public class InterfazFermentador extends javax.swing.JFrame {
     Eventos ev;
     private JNumBoardPane tecladoNumerico;
     private JPopupMenu pop;
+    private Map<Integer, BioreactorUIState> uiStates = new HashMap<>();
 
     /**
      * Creates new form InterfazFermentador
@@ -62,18 +62,8 @@ public class InterfazFermentador extends javax.swing.JFrame {
     public InterfazFermentador() {
         initComponents();
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/images/logo.png")).getImage());
-        modelo2 = new DefaultTableModel();
-        tabla2.setModel(modelo2);
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
         this.setLayout(null);
         setLocationRelativeTo(null);
-        //CargarDatos();
         abrir_clave = new com.keyboard.Password();
         jPanel1.setBackground(Color.WHITE);
         jPanel2.setBackground(Color.WHITE);
@@ -92,8 +82,62 @@ public class InterfazFermentador extends javax.swing.JFrame {
 
         Off.setBackground(Color.WHITE);
         monitor = new Monitor();
+        inicializarUIBioreactores();
         //bombas = new BombasPeristalticas();
 
+    }
+
+    private void inicializarUIBioreactores() {
+
+        // Asegura que los mapas existen (no los re-crees si ya tienen datos)
+        if (modelosPorBioreactor == null) {
+            modelosPorBioreactor = new java.util.HashMap<Integer, javax.swing.table.DefaultTableModel>();
+        }
+        if (chartsPorBioreactor == null) {
+            chartsPorBioreactor = new java.util.HashMap<Integer, com.graphs.BioreactorChart>();
+        }
+
+        String[] columnas = new String[]{
+            "Fecha", "Hora", "Temp", "RPM", "pH", "OD", "CO2"
+        };
+
+        // Para cada bioreactor, crea modelo/chart solo si NO existen
+        for (com.model.Bioreactor bio : com.control.Variables.bioreactores) {
+            int id = bio.getId();
+
+            if (!modelosPorBioreactor.containsKey(id)) {
+                javax.swing.table.DefaultTableModel modeloBio
+                        = new javax.swing.table.DefaultTableModel(columnas, 0);
+                modelosPorBioreactor.put(id, modeloBio);
+            }
+
+            if (!chartsPorBioreactor.containsKey(id)) {
+                javax.swing.table.DefaultTableModel modeloBio
+                        = modelosPorBioreactor.get(id);
+                com.graphs.BioreactorChart chartBio
+                        = new com.graphs.BioreactorChart("Bio " + id, modeloBio);
+                chartsPorBioreactor.put(id, chartBio);
+            }
+        }
+
+        // === SELECCIONAR EL BIOREACTOR ACTUAL Y ENLAZAR A LA VISTA ===
+        int idActual = com.control.Variables.idBioreactor;
+
+        javax.swing.table.DefaultTableModel modeloActual
+                = modelosPorBioreactor.get(idActual);
+        com.graphs.BioreactorChart chartActual
+                = chartsPorBioreactor.get(idActual);
+
+        if (modeloActual != null) {
+            tabla2.setModel(modeloActual);
+            modelo2 = modeloActual; // para código viejo que aún use modelo2
+        }
+
+        if (chartActual != null) {
+            com.views.Monitor.Grafica.setContentPane(chartActual.getChartPanel());
+            com.views.Monitor.Grafica.revalidate();
+            com.views.Monitor.Grafica.repaint();
+        }
     }
 
     public void Close() {
@@ -135,13 +179,13 @@ public class InterfazFermentador extends javax.swing.JFrame {
             Dimension height = getSize();
             if (Variables.idBioreactor == 101) {
                 Img = new ImageIcon(getClass().getResource("/com/images/Fondo_Bio1L.png"));
-                grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);                
+                grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);
             } else if (Variables.idBioreactor == 102) {
                 Img = new ImageIcon(getClass().getResource("/com/images/Fondo_Bio5L.png"));
-                grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);                
+                grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);
             } else if (Variables.idBioreactor == 103) {
                 Img = new ImageIcon(getClass().getResource("/com/images/Fondo_Bio30L.png"));
-                grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);                
+                grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);
             }
             setOpaque(false);
             super.paintComponent(grafico);
@@ -582,7 +626,7 @@ public class InterfazFermentador extends javax.swing.JFrame {
                 com.views.Control.SetPointTemperatura.setText(Double.toString(bio.getParametros().getTemperatura().getSetpoint()));
                 com.views.Control.SetPointpH.setText(Double.toString(bio.getParametros().getPh().getSetpoint()));
                 com.views.Control.SetPointOD2.setText(Double.toString(bio.getParametros().getOd().getSetpoint()));
-                
+
                 if (bio.isEstadoControlAgitacion()) {
                     com.views.Control.InicioControlAgitacion.setText("Detener");
                     com.views.Control.InicioControlAgitacion.setBackground(Color.RED);
@@ -611,11 +655,11 @@ public class InterfazFermentador extends javax.swing.JFrame {
                     com.views.Control.InicioControlOD.setText("Iniciar");
                     com.views.Control.InicioControlOD.setBackground(Color.GREEN);
                 }
-                if (bio.leerSalida(Bioreactor.Salida.INGRESO_CO2)==5) {
-                    com.views.Control.ValvulaCO2.setText("Desactivar");
+                if (bio.leerSalida(Bioreactor.Salida.INGRESO_CO2) == 5) {
+                    com.views.Control.ValvulaCO2.setText("Cerrar CO2");
                     com.views.Control.ValvulaCO2.setBackground(Color.RED);
                 } else {
-                    com.views.Control.ValvulaCO2.setText("Activar");
+                    com.views.Control.ValvulaCO2.setText("Abrir CO2");
                     com.views.Control.ValvulaCO2.setBackground(Color.GREEN);
                 }
             }
@@ -640,7 +684,23 @@ public class InterfazFermentador extends javax.swing.JFrame {
         monitor.setBounds(10, 1, 1280, 629);
         monitor.repaint();
         monitor.updateUI();
-        Graficar.actualizarGrafica();
+        //Graficar.actualizarGrafica();
+        int id = Variables.idBioreactor;
+
+        javax.swing.table.DefaultTableModel modeloActual = modelosPorBioreactor.get(id);
+        com.graphs.BioreactorChart chartActual = chartsPorBioreactor.get(id);
+
+        if (modeloActual != null) {
+            tabla2.setModel(modeloActual);
+            modelo2 = modeloActual; 
+        }
+
+        if (chartActual != null) {
+            // Igual que hacía antes Graficar.actualizarGrafica():
+            com.views.Monitor.Grafica.setContentPane(chartActual.getChartPanel());
+            com.views.Monitor.Grafica.revalidate();
+            com.views.Monitor.Grafica.repaint();
+        }
         com.views.Monitor.jSpinner1.setValue(Variables.TMuestreo / 1000);
         //new TecladoVirtual.Teclados( this, true).setVisible(true);
     }//GEN-LAST:event_MonitorActionPerformed
@@ -683,7 +743,8 @@ public class InterfazFermentador extends javax.swing.JFrame {
     private void AjusteControlAgitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AjusteControlAgitacionActionPerformed
         if (abrir_clave == null || !abrir_clave.isDisplayable()) {
             abrir_clave = new com.keyboard.Password();
-        }if (!abrir_clave.isVisible()) {
+        }
+        if (!abrir_clave.isVisible()) {
             Variables.ajusteAgitador = true;
             abrir_clave.setVisible(true);
             com.keyboard.Password.jPasswordField1.setText(null);

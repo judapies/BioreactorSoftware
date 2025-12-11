@@ -32,17 +32,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InterfazPrincipal extends javax.swing.JFrame {
 
-    private static final long serialVersionUID = 01;
-    public static DefaultTableModel modelo;
-    public static DefaultTableModel modelo2;
-    public static Recetas cascada;
+    private static final long serialVersionUID = 01;    
     private final int seleccion = 0;
     Imagen2 Img = new Imagen2();
     com.info.Batch abrir = new com.info.Batch();
     com.keyboard.Password abrir_clave;
     Eventos ev;
     public static InterfazFermentador Biorreactor1 = null;
-    Control controla;
 
     /**
      * Creates new form InterfazFermentador
@@ -52,14 +48,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         initComponents();
         CargarDatos();
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/images/logo.png")).getImage());
-        modelo2 = new DefaultTableModel();
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
-        modelo2.addColumn("");
         this.setLayout(null);
         setLocationRelativeTo(null);
         abrir_clave = new com.keyboard.Password();
@@ -962,6 +950,13 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 } else {
                     com.views.Control.InicioControlOD.setText("Iniciar");
                     com.views.Control.InicioControlOD.setBackground(Color.GREEN);
+                }
+                if (bio.leerSalida(Bioreactor.Salida.INGRESO_CO2) == 5) {
+                    com.views.Control.ValvulaCO2.setText("Cerrar CO2");
+                    com.views.Control.ValvulaCO2.setBackground(Color.RED);
+                } else {
+                    com.views.Control.ValvulaCO2.setText("Abrir CO2");
+                    com.views.Control.ValvulaCO2.setBackground(Color.GREEN);
                 }
             }
         }

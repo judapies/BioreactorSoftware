@@ -7,6 +7,7 @@ package com.views;
 
 import com.control.Variables;
 import com.graphs.HiloGrafica;
+import com.model.Bioreactor;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +49,18 @@ public class Monitor extends javax.swing.JPanel {
         SpinnerNumberModel model = new SpinnerNumberModel(initial, min, max, increment);
         jSpinner1.setModel(model);
         jSpinner1.setValue(Variables.TMuestreo);
-        if (Variables.estadoAdquisicion) {
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
+            }
+        }
+
+        if (bioActual != null && bioActual.isEstadoAdquisicion()) {
             jButton1.setText("Detener Adquisición");
+        } else {
+            jButton1.setText("Iniciar Adquisición");
         }
     }
 
@@ -240,102 +251,168 @@ public class Monitor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (Variables.estadoAdquisicion) {
-            JOptionPane.showMessageDialog(null, "Detenga la adquisiciòn de datos", "JP", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            if (com.views.InterfazFermentador.tabla2.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "No Hay Datos para Exportar.", "JP", JOptionPane.INFORMATION_MESSAGE);
-                return;
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
             }
-            
-            Calendar cal = new GregorianCalendar();
-            int hora = cal.get(Calendar.HOUR_OF_DAY);
-            int minuto = cal.get(Calendar.MINUTE);
-            int segundo = cal.get(Calendar.SECOND);
-            Formatter formato2H = new Formatter();  // Formato de la hora
-            formato2H.format("%02d", hora);
-            String hora2 = formato2H.toString();    // String de la hora dos cifras
-            Formatter formato2M = new Formatter();
-            formato2M.format("%02d", minuto);
-            String minuto2 = formato2M.toString();  // String de minutos dos cifras
-            Formatter formato2S = new Formatter();
-            formato2S.format("%02d", segundo);
-            String segundo2 = formato2S.toString(); // String de segundos dos cifras
+        }
 
-            JFileChooser chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo de Excel", "xls");
-            chooser.setFileFilter(filter);
-            chooser.setDialogTitle("Guardar Como");
-            chooser.setMultiSelectionEnabled(false);
-            chooser.setAcceptAllFileFilterUsed(false);
+        if (bioActual == null) {
+            JOptionPane.showMessageDialog(null, "No se encontró el bioreactor actual", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            String defaultFileName = "datos"+hora2+minuto2+segundo2+cal.get(Calendar.DAY_OF_MONTH)+"-"+cal.get(Calendar.MONTH)+"-"+cal.get(Calendar.YEAR);
-            chooser.setSelectedFile(new File(defaultFileName));
-            
-            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                ArrayList<JTable> tb = new ArrayList<>();
-                ArrayList<String> nom = new ArrayList<>();
-                tb.add(com.views.InterfazFermentador.tabla2);
-                nom.add("Datos del Proceso");
-                String file = chooser.getSelectedFile().toString().concat(".xls");
-                try {
-                    com.graphs.ExportarLectura e = new com.graphs.ExportarLectura(new File(file), tb, nom, Variables.IngresoDatos);
-                    Variables.añadirEvento("Exporto Datos a excel");
-                    if (e.export()) {
-                    }
+        if (bioActual.isEstadoAdquisicion()) {
+            JOptionPane.showMessageDialog(null, "Detenga la adquisición de este bioreactor antes de exportar", "JP", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
 
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Hubo un error " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (com.views.InterfazFermentador.tabla2.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No hay datos para exportar.", "JP", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
 
-                }
+        Calendar cal = new GregorianCalendar();
+        int hora = cal.get(Calendar.HOUR_OF_DAY);
+        int minuto = cal.get(Calendar.MINUTE);
+        int segundo = cal.get(Calendar.SECOND);
+        Formatter formato2H = new Formatter();
+        formato2H.format("%02d", hora);
+        String hora2 = formato2H.toString();
+        Formatter formato2M = new Formatter();
+        formato2M.format("%02d", minuto);
+        String minuto2 = formato2M.toString();
+        Formatter formato2S = new Formatter();
+        formato2S.format("%02d", segundo);
+        String segundo2 = formato2S.toString();
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo de Excel", "xls");
+        chooser.setFileFilter(filter);
+        chooser.setDialogTitle("Guardar Como");
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        String defaultFileName = "datos_Bio" + bioActual.getId() + "_"
+                + hora2 + minuto2 + segundo2
+                + cal.get(Calendar.DAY_OF_MONTH) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.YEAR);
+
+        chooser.setSelectedFile(new File(defaultFileName));
+
+        if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            ArrayList<JTable> tb = new ArrayList<JTable>();
+            ArrayList<String> nom = new ArrayList<String>();
+            tb.add(com.views.InterfazFermentador.tabla2);
+            nom.add("Datos del Proceso Bio " + bioActual.getId());
+            String file = chooser.getSelectedFile().toString().concat(".xls");
+            try {
+                com.graphs.ExportarLectura e = new com.graphs.ExportarLectura(new File(file), tb, nom, Variables.IngresoDatos);
+                Variables.añadirEvento("Exportó datos a Excel del Bio " + bioActual.getId());
+                e.export();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Hubo un error " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if ("Iniciar Adquisición".equals(jButton1.getText())) {
-            Variables.añadirEvento("Inicio Adquisición de Datos");
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
+            }
+        }
+
+        if (bioActual == null) {
+            JOptionPane.showMessageDialog(null, "No se encontró el bioreactor actual", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        boolean adquiriendoEste = bioActual.isEstadoAdquisicion();
+
+        if (!adquiriendoEste) {
+            Variables.añadirEvento("Inicio Adquisición de Datos Bio " + bioActual.getId());
+
             if (Segundos.isSelected()) {
                 Variables.TMuestreo = (int) jSpinner1.getValue() * 1000;
                 Variables.SelecSegundos = true;
                 Variables.SelecMinutos = false;
-            }
-            if (Minutos.isSelected()) {
+            } else if (Minutos.isSelected()) {
                 Variables.TMuestreo = (int) jSpinner1.getValue() * 1000;
                 Variables.TMuestreo = Variables.TMuestreo * 60;
                 Variables.SelecMinutos = true;
                 Variables.SelecSegundos = false;
             }
-            Variables.estadoAdquisicion = true;
-            new Thread(new HiloGrafica()).start();
+
+            bioActual.setEstadoAdquisicion(true);
+            if (!Variables.estadoAdquisicion) {
+                Variables.estadoAdquisicion = true;
+                new Thread(new HiloGrafica()).start();
+            }
             jButton1.setText("Detener Adquisición");
         } else {
-            Variables.añadirEvento("Detuvo Adquisición de Datos");
-            Variables.estadoAdquisicion = false;
+            Variables.añadirEvento("Detuvo Adquisición de Datos Bio " + bioActual.getId());
+            bioActual.setEstadoAdquisicion(false);
+            boolean algunActivo = false;
+            for (Bioreactor b : Variables.bioreactores) {
+                if (b.isEstadoAdquisicion()) {
+                    algunActivo = true;
+                    break;
+                }
+            }
+
+            if (!algunActivo) {
+                Variables.estadoAdquisicion = false;
+            }
             jButton1.setText("Iniciar Adquisición");
         }
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void BorraGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorraGraficaActionPerformed
-        int continuar = JOptionPane.showConfirmDialog(null, "Se borrara la grafica"
-                + "\n¿Desea continuar?");
-        if (continuar == JOptionPane.YES_OPTION) {//si se selecciona SI 
-            Variables.añadirEvento("Borro grafica de datos");
-            int rowCount=com.views.InterfazFermentador.modelo2.getRowCount();            
-
-            // Eliminar filas desde la última hasta la primera
-            for (int i = rowCount - 1; i >= 0; i--) {
-                com.views.InterfazFermentador.modelo2.removeRow(i);
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
             }
-            com.graphs.Graficar.datosRedox.clear();
-            com.graphs.Graficar.datosOD.clear();
-            com.graphs.Graficar.datosPH.clear();
-            com.graphs.Graficar.datosTemperatura.clear();
-            com.graphs.Graficar.datosRPM.clear();
-            com.graphs.Graficar.datosTiempo.clear();
-            com.graphs.Graficar.n = 0;
-            com.graphs.Graficar.tamaño = 0;
+        }
+
+        if (bioActual == null) {
+            JOptionPane.showMessageDialog(null, "No se encontró el bioreactor actual", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (bioActual.isEstadoAdquisicion()) {
+            JOptionPane.showMessageDialog(null, "Detenga la adquisición de este bioreactor antes de borrar la gráfica", "JP", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        int continuar = JOptionPane.showConfirmDialog(
+                null,
+                "Se borrará la gráfica y los datos del bioreactor " + bioActual.getId() + ".\n¿Desea continuar?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (continuar == JOptionPane.YES_OPTION) {
+            Variables.añadirEvento("Borró gráfica de datos del Bio " + bioActual.getId());
+
+            int id = bioActual.getId();
+            javax.swing.table.DefaultTableModel modelo = com.views.InterfazFermentador.modelosPorBioreactor.get(id);
+            com.graphs.BioreactorChart chart = com.views.InterfazFermentador.chartsPorBioreactor.get(id);
+
+            if (modelo != null) {
+                modelo.setRowCount(0);
+            }
+            if (chart != null) {
+                chart.clear();
+            }
+            if (modelo != null) {
+                com.views.InterfazFermentador.tabla2.setModel(modelo);
+            }
         }
     }//GEN-LAST:event_BorraGraficaActionPerformed
 
@@ -344,82 +421,142 @@ public class Monitor extends javax.swing.JPanel {
     }//GEN-LAST:event_SegundosActionPerformed
 
     private void BotonCargaDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonCargaDatosActionPerformed
-        if (Variables.estadoAdquisicion) {
-            JOptionPane.showMessageDialog(null, "Detenga la adquisiciòn de datos", "JP", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JFileChooser chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo JP", "jp");
-            chooser.setFileFilter(filter);
-            chooser.setDialogTitle("Abrir Archivo");
-            chooser.setMultiSelectionEnabled(false);
-            chooser.setAcceptAllFileFilterUsed(false);
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
+            }
+        }
 
-            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                ArrayList<JTable> tb = new ArrayList<>();
-                String file = chooser.getSelectedFile().toString();
-                System.out.println(file);
-                File f = new File(file);
-                if (f.exists()) {
-                    com.info.AbrirArchivo o = new com.info.AbrirArchivo();
-                    try {
-                        o.openFile(f);
-                    } catch (IOException | ClassNotFoundException ex) {
-                        JOptionPane.showMessageDialog(null, "No puede abrir Info", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    try {
-                        tb = o.fileConvert().get(0);
-                        com.graphs.Graficar.graficar(tb);
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(null, "No puede abrir Info", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+        if (bioActual == null) {
+            JOptionPane.showMessageDialog(null, "No se encontró el bioreactor actual", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (bioActual.isEstadoAdquisicion()) {
+            JOptionPane.showMessageDialog(null, "Detenga la adquisición de este bioreactor antes de cargar datos", "JP", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo JP", "jp");
+        chooser.setFileFilter(filter);
+        chooser.setDialogTitle("Abrir Archivo");
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            String file = chooser.getSelectedFile().toString();
+            File f = new File(file);
+            if (!f.exists()) {
+                JOptionPane.showMessageDialog(null, "El archivo no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            com.info.AbrirArchivo o = new com.info.AbrirArchivo();
+            try {
+                o.openFile(f);
+                ArrayList<JTable> tb = o.fileConvert().get(0);
+
+                if (tb == null || tb.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El archivo no contiene datos válidos", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                JTable tablaArchivo = tb.get(0);
+
+                int id = bioActual.getId();
+                com.graphs.BioreactorChart chart = com.views.InterfazFermentador.chartsPorBioreactor.get(id);
+                javax.swing.table.DefaultTableModel modelo = com.views.InterfazFermentador.modelosPorBioreactor.get(id);
+
+                if (chart == null || modelo == null) {
+                    JOptionPane.showMessageDialog(null, "No hay configuración de gráfica para este bioreactor", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Limpia datos actuales SOLO de este bioreactor
+                chart.clear();
+
+                // Reconstruye dataset + tabla desde el archivo
+                chart.loadFromTable(tablaArchivo);
+
+                com.views.InterfazFermentador.tabla2.setModel(modelo);
+
+                Variables.añadirEvento("Cargó datos desde archivo " + f.getName() + " en Bio " + id);
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "No puede abrir Info: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(null, "Formato de archivo inválido: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error procesando el archivo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BotonCargaDatosActionPerformed
 
     private void BotonGuardaDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonGuardaDatosActionPerformed
-        if (Variables.estadoAdquisicion) {
-            JOptionPane.showMessageDialog(null, "Detenga la adquisiciòn de datos", "JP", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            if (com.views.InterfazFermentador.tabla2.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "No Hay Datos para Guardar.", "JP", JOptionPane.INFORMATION_MESSAGE);
-                return;
+        Bioreactor bioActual = null;
+        for (Bioreactor b : Variables.bioreactores) {
+            if (b.getId() == Variables.idBioreactor) {
+                bioActual = b;
+                break;
             }
-            Calendar cal = new GregorianCalendar();
-            int hora = cal.get(Calendar.HOUR_OF_DAY);
-            int minuto = cal.get(Calendar.MINUTE);
-            int segundo = cal.get(Calendar.SECOND);
-            Formatter formato2H = new Formatter();  // Formato de la hora
-            formato2H.format("%02d", hora);
-            String hora2 = formato2H.toString();    // String de la hora dos cifras
-            Formatter formato2M = new Formatter();
-            formato2M.format("%02d", minuto);
-            String minuto2 = formato2M.toString();  // String de minutos dos cifras
-            Formatter formato2S = new Formatter();
-            formato2S.format("%02d", segundo);
-            String segundo2 = formato2S.toString(); // String de segundos dos cifras
+        }
 
-            JFileChooser chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo JP", "jp");
-            chooser.setFileFilter(filter);
-            chooser.setDialogTitle("Guardar Como");
-            chooser.setMultiSelectionEnabled(false);
-            chooser.setAcceptAllFileFilterUsed(false);
-            String defaultFileName = "datos"+hora2+minuto2+segundo2+cal.get(Calendar.DAY_OF_MONTH)+"-"+cal.get(Calendar.MONTH)+"-"+cal.get(Calendar.YEAR);
-            chooser.setSelectedFile(new File(defaultFileName));
+        if (bioActual == null) {
+            JOptionPane.showMessageDialog(null, "No se encontró el bioreactor actual", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                ArrayList<JTable> tb = new ArrayList<>();
-                tb.add(com.views.InterfazFermentador.tabla2);
-                com.info.GuardarArchivo s = new com.info.GuardarArchivo();
-                String file = chooser.getSelectedFile().toString().concat(".jp");
-                File f = new File(file);
-                try {
-                    s.startSaving(tb);
-                    s.saveData(f);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "No puede guardar Datos", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        if (bioActual.isEstadoAdquisicion()) {
+            JOptionPane.showMessageDialog(null, "Detenga la adquisición de este bioreactor antes de guardar datos", "JP", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        if (com.views.InterfazFermentador.tabla2.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No hay datos para guardar.", "JP", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        Calendar cal = new GregorianCalendar();
+        int hora = cal.get(Calendar.HOUR_OF_DAY);
+        int minuto = cal.get(Calendar.MINUTE);
+        int segundo = cal.get(Calendar.SECOND);
+        Formatter formato2H = new Formatter();
+        formato2H.format("%02d", hora);
+        String hora2 = formato2H.toString();
+        Formatter formato2M = new Formatter();
+        formato2M.format("%02d", minuto);
+        String minuto2 = formato2M.toString();
+        Formatter formato2S = new Formatter();
+        formato2S.format("%02d", segundo);
+        String segundo2 = formato2S.toString();
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo JP", "jp");
+        chooser.setFileFilter(filter);
+        chooser.setDialogTitle("Guardar Como");
+        chooser.setMultiSelectionEnabled(false);
+        chooser.setAcceptAllFileFilterUsed(false);
+
+        String defaultFileName = "datos_Bio" + bioActual.getId() + "_"
+                + hora2 + minuto2 + segundo2
+                + cal.get(Calendar.DAY_OF_MONTH) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.YEAR);
+        chooser.setSelectedFile(new File(defaultFileName));
+
+        if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            ArrayList<JTable> tb = new ArrayList<JTable>();
+            tb.add(com.views.InterfazFermentador.tabla2);
+            com.info.GuardarArchivo s = new com.info.GuardarArchivo();
+            String file = chooser.getSelectedFile().toString().concat(".jp");
+            File f = new File(file);
+            try {
+                s.startSaving(tb);
+                s.saveData(f);
+                Variables.añadirEvento("Guardó datos JP del Bio " + bioActual.getId());
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "No puede guardar datos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_BotonGuardaDatosActionPerformed

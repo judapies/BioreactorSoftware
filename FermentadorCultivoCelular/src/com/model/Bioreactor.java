@@ -40,8 +40,23 @@ public class Bioreactor implements IBioreactor, Serializable {
         this.capacidadLitros = capacidadLitros;
     }
 
+    /**
+     * @return the estadoAdquisicion
+     */
+    public boolean isEstadoAdquisicion() {
+        return estadoAdquisicion;
+    }
+
+    /**
+     * @param estadoAdquisicion the estadoAdquisicion to set
+     */
+    public void setEstadoAdquisicion(boolean estadoAdquisicion) {
+        this.estadoAdquisicion = estadoAdquisicion;
+    }
+
     // === Enums para salidas y entradas ===
     public enum Salida {
+
         SUMINISTRO_VAPOR,
         RECIRCULACION,
         ENTRADA_INTERCAMBIADOR,
@@ -97,6 +112,9 @@ public class Bioreactor implements IBioreactor, Serializable {
     private boolean estadoControlCO2 = false;
     private boolean estadoControlAgitacion = false;
     private boolean estadoControlEsterilizacion = false;
+    private boolean estadoAdquisicion = false;
+    private int tiempoMuestreoMs = 1000;
+    private long proximoMuestreoMs = 0;
     private double tiempoEsterilizacionConfigurado = 300; // por ejemplo, 5 minutos
     private long tiempoInicioEsterilizacion = -1;
     private boolean esterilizando = false;
@@ -128,7 +146,7 @@ public class Bioreactor implements IBioreactor, Serializable {
 
         this.parametros = new ParametrosConfiguracionBioreactor();
 
-         // Inicializar salidas como falsas (apagadas)
+        // Inicializar salidas como falsas (apagadas)
         for (Salida s : Salida.values()) {
             salidas.put(s, 10);
         }
@@ -230,17 +248,16 @@ public class Bioreactor implements IBioreactor, Serializable {
 
         double temp1 = data[1] + data[2] / 10.0;
         double temp2 = data[3] + data[4] / 10.0;
-        
-        
+
         //double ph = data[5] + data[6] / 100.0;
-        double ph_prev = (data[5] + (data[6]*256)) / 1000.0;
-        double ph=(parametros.getPh().getMPH()*ph_prev)+parametros.getPh().getBPH();
-        ph+=parametros.getPh().getOffset();
-        
+        double ph_prev = (data[5] + (data[6] * 256)) / 1000.0;
+        double ph = (parametros.getPh().getMPH() * ph_prev) + parametros.getPh().getBPH();
+        ph += parametros.getPh().getOffset();
+
         //double od = data[7] + data[8] / 100.0;
-        double od_prev = (data[7] + (data[8]*256)) / 1000.0;
-        double od=(parametros.getOd().getMOD()*od_prev)+parametros.getOd().getBOD();
-        od+=parametros.getOd().getOffset();
+        double od_prev = (data[7] + (data[8] * 256)) / 1000.0;
+        double od = (parametros.getOd().getMOD() * od_prev) + parametros.getOd().getBOD();
+        od += parametros.getOd().getOffset();
 
         int rpmCH1 = ((data[10] & 0xFF) << 8) | (data[9] & 0xFF);
         int rpmCH2 = ((data[12] & 0xFF) << 8) | (data[11] & 0xFF);
@@ -266,7 +283,7 @@ public class Bioreactor implements IBioreactor, Serializable {
         actualizarEntrada(Entrada.ENTRADA_DIGITAL_2, data[23]);
         actualizarEntrada(Entrada.ENTRADA_DIGITAL_3, data[24]);
     }
-    
+
     /**
      * Realiza el proceso de desfogue del biorreactor.
      *
@@ -311,8 +328,8 @@ public class Bioreactor implements IBioreactor, Serializable {
     }
 
     /**
-     * Detiene el proceso de enfriamiento del biorreactor. Apaga las salidas
-     * de agua de enfriamiento
+     * Detiene el proceso de enfriamiento del biorreactor. Apaga las salidas de
+     * agua de enfriamiento
      */
     @Override
     public void detieneEnfriar() {
@@ -328,7 +345,7 @@ public class Bioreactor implements IBioreactor, Serializable {
         activarSalida(Salida.VENTEO_CO2, OFF);
         activarSalida(Salida.DESFOGUE_VAPOR, OFF);
     }
-    
+
     /**
      * Controla el llenado del reservorio de recirculación. Si la entrada
      * digital 1 está desactivada (OFF), se activa la recirculación y el
@@ -336,7 +353,7 @@ public class Bioreactor implements IBioreactor, Serializable {
      * todas las salidas.
      */
     public boolean llenadoReservorio() {
-        if (leerEntrada(Entrada.ENTRADA_DIGITAL_1) !=5) {
+        if (leerEntrada(Entrada.ENTRADA_DIGITAL_1) != 5) {
             activarSalida(Salida.SUMINISTRO_VAPOR, OFF);
             activarSalida(Salida.RECIRCULACION, ON);
             activarSalida(Salida.ENTRADA_INTERCAMBIADOR, OFF);
@@ -378,7 +395,7 @@ public class Bioreactor implements IBioreactor, Serializable {
         activarSalida(Salida.BOMBA_RECIRCULACION, ON);
         activarSalida(Salida.DESFOGUE_VAPOR, OFF);
     }
-    
+
     /**
      * Activa la recirculación de agua por la chaqueta del biorreactor. Enciende
      * las bombas y la recirculación; apaga el resto de salidas.
@@ -614,6 +631,22 @@ public class Bioreactor implements IBioreactor, Serializable {
         long segTotal = total % 60;
 
         return String.format("%02d:%02d / %02d:%02d", minTrans, segTrans, minTotal, segTotal);
+    }
+
+    public int getTiempoMuestreoMs() {
+        return tiempoMuestreoMs;
+    }
+
+    public void setTiempoMuestreoMs(int tiempoMuestreoMs) {
+        this.tiempoMuestreoMs = tiempoMuestreoMs;
+    }
+
+    public long getProximoMuestreoMs() {
+        return proximoMuestreoMs;
+    }
+
+    public void setProximoMuestreoMs(long proximoMuestreoMs) {
+        this.proximoMuestreoMs = proximoMuestreoMs;
     }
 
 }
