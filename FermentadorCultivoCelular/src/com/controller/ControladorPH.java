@@ -35,7 +35,7 @@ public class ControladorPH {
             String tipo = bomba.getParametros().getAsignacionBomba(); // "Ácido" o "Base"
             boolean encendida = bomba.isEstadoOn();
 
-            if (error < 0) {
+            if (error > 0) {
                 if ("Acido".equalsIgnoreCase(tipo) && encendida) {
                     bomba.setEstadoControl(false);
                     bioreactor.activarSalida(Bioreactor.Salida.valueOf("BOMBA_PERISTALTICA_" + (i + 1)), 10); // OFF
