@@ -27,6 +27,15 @@ public class AjustespH extends javax.swing.JFrame {
     public AjustespH() {
         initComponents();
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/images/logo.png")).getImage());
+        double initial=0.1;
+        for (Bioreactor bio : Variables.bioreactores) {
+            if (Variables.idBioreactor == bio.getId()) {
+                initial = bio.getParametros().getPh().getBanda();
+            }
+        }
+        double min = 0.1, max = 1.0, increment = 0.1;
+        SpinnerNumberModel model = new SpinnerNumberModel(initial, min, max, increment);
+        AjustespH.DeadBand.setModel(model);
 
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
