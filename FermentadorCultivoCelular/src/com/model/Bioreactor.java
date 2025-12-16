@@ -270,7 +270,9 @@ public class Bioreactor implements IBioreactor, Serializable {
         int presionPreCamara = ((data[16] & 0xFF) << 8) | (data[15] & 0xFF);
         presionPreCamara+=parametros.getPresion().getAjustePresionPreCamara();
 
-        double co2 = data[20] + data[21] / 1000.0;
+        //double co2 = data[20] + data[21] / 1000.0;
+        double co2 = data[20] + (data[21]*256);
+        co2/=1000.0;
 
         actualizarEntrada(Entrada.TEMPERATURA_1, procesarLectura("temperatura", temp1));
         actualizarEntrada(Entrada.TEMPERATURA_2, procesarLectura("temperatura2", temp2));
@@ -280,7 +282,7 @@ public class Bioreactor implements IBioreactor, Serializable {
         actualizarEntrada(Entrada.RPM_CH2, procesarLectura("rpmCH2", rpmCH2));
         actualizarEntrada(Entrada.PRESION_CAMARA, procesarLectura("presionCamara", presionCamara));
         actualizarEntrada(Entrada.PRESION_PRE_CAMARA, procesarLectura("presionPreCamara", presionPreCamara));
-        actualizarEntrada(Entrada.CO2, procesarLectura("CO2", co2));
+        actualizarEntrada(Entrada.CO2, procesarLectura("CO2", co2));        
         actualizarEntrada(Entrada.NIVEL_ALTO, data[17]);
         actualizarEntrada(Entrada.NIVEL_MEDIO, data[18]);
         actualizarEntrada(Entrada.NIVEL_BAJO, data[19]);

@@ -99,7 +99,7 @@ public class ExportarLectura {
                            jxl.format.Colour.GRAY_80);
 
             //Primera columna
-            final String[] encabezado = {"Fecha","Hora","Temperatura","RPM","pH","OD","Redox"};
+            final String[] encabezado = {"Fecha","Hora","Temperatura","RPM","pH","OD","CO2"};
             
             
             //imprime informacion

@@ -77,7 +77,7 @@ public class Hilo implements Runnable {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                if (!Variables.testComponentes) {
+                if (!Variables.testComponentes) {                    
                     controladorNivel.get(i).controlar();
 
                     if (b.isEstadoControlCO2()) {
@@ -106,14 +106,14 @@ public class Hilo implements Runnable {
                         } else {
                             if (b.getParametros().getTemperatura().isControlIntercambiador()) {
                                 controladorTemperatura.get(i).controlarIntercambiador();
-                            }else{
+                            } else {
                                 controladorTemperatura.get(i).controlarVapor();
                             }
                         }
                     } else {
                         if (b.getParametros().getTemperatura().isControlIntercambiador()) {
                             controladorTemperatura.get(i).detenerIntercambiador();
-                        }else{
+                        } else {
                             if (!b.isEstadoControlEsterilizacion()) {
                                 controladorTemperatura.get(i).cancelar();
                             }
@@ -255,11 +255,11 @@ public class Hilo implements Runnable {
         Bioreactor bio1 = Variables.bioreactores.get(1);
 
         if (bio1.isEstadoControlCO2()) {
-            if(presionCamara>=bio1.getParametros().getCO2().getSetpoint()+30){
+            if (presionCamara >= bio1.getParametros().getCO2().getSetpoint() + 30) {
                 bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara--);
-            }else if(presionCamara<bio1.getParametros().getCO2().getSetpoint()-bio1.getParametros().getCO2().getHisteresis()){
+            } else if (presionCamara < bio1.getParametros().getCO2().getSetpoint() - bio1.getParametros().getCO2().getHisteresis()) {
                 bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara++);
-            }else{
+            } else {
                 bio1.actualizarEntrada(Bioreactor.Entrada.PRESION_CAMARA, presionCamara++);
             }
         } else {
@@ -311,7 +311,7 @@ public class Hilo implements Runnable {
             } else {
                 LabelUpdater.actualizarLabel("pH", bio.getId() - 100, "" + decimales2.format(bio.leerEntrada(Bioreactor.Entrada.PH)));
             }
-            LabelUpdater.actualizarLabel("CO2", bio.getId() - 100, "" + decimales2.format(bio.leerEntrada(Bioreactor.Entrada.CO2)));
+            LabelUpdater.actualizarLabel("CO2", bio.getId() - 100, "" + (String.format("%.3f", bio.leerEntrada(Bioreactor.Entrada.CO2))));
             LabelUpdater.actualizarLabel("Agitacion", bio.getId() - 100, "" + decimal.format(bio.leerEntrada(Bioreactor.Entrada.RPM_CH1)));
             ///////////////////////////////////////////////
 
@@ -337,7 +337,7 @@ public class Hilo implements Runnable {
                     com.views.Control.botonNivelBajo.setBackground(bio.leerEntrada(Bioreactor.Entrada.NIVEL_BAJO) < 60 ? Color.GREEN : Color.RED);
                     com.views.Control.pointValuePresionCamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA)));
                     com.views.Control.pointValuePresionPrecamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA)));
-                    com.views.Control.PointValueCO2.setText(Double.toString(bio.leerEntrada(Bioreactor.Entrada.CO2)));
+                    com.views.Control.PointValueCO2.setText(String.format("%.3f", bio.leerEntrada(Bioreactor.Entrada.CO2)));
                     com.views.Control.PointValueTiempoEsterilizacion.setText(controladorEsterilizacion.get(i).getTiempoFormateado());
                 }
 
@@ -358,7 +358,7 @@ public class Hilo implements Runnable {
                     com.views.TestComponentes.PointValuePresionCamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA)) + " kpa");
                     com.views.TestComponentes.PointValuePresionPrecamara.setText("" + (int) (bio.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA)) + " kpa");
 
-                    com.views.TestComponentes.PointValueCO2.setText(Double.toString(bio.leerEntrada(Bioreactor.Entrada.CO2)));
+                    com.views.TestComponentes.PointValueCO2.setText(String.format("%.3f", bio.leerEntrada(Bioreactor.Entrada.CO2)));
                 }
             }
         }

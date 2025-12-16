@@ -43,6 +43,7 @@ public class BioreactorChart {
     private final DefaultTableModel tableModel;
 
     // formateadores
+    private final DecimalFormat dfCO2 = new DecimalFormat("0.000");
     private final DecimalFormat dfPH = new DecimalFormat("0.00");
     private final DecimalFormat df = new DecimalFormat("0.0");
     private final DecimalFormat dfRPM = new DecimalFormat("000");
@@ -223,7 +224,7 @@ public class BioreactorChart {
         row[3] = dfRPM.format(rpm);
         row[4] = dfPH.format(pH);
         row[5] = df.format(od);
-        row[6] = df.format(co2);
+        row[6] = dfCO2.format(co2);
 
         tableModel.addRow(row);
     }
