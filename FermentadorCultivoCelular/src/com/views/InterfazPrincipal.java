@@ -838,7 +838,36 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TestComponentesActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        int continuar = JOptionPane.showConfirmDialog(null,"Se apagara el Fermentador"
+                                                            + "\n¿Desea continuar?");
+        if(continuar == JOptionPane.YES_OPTION){ //si se selecciona SI
+            for (Bioreactor bio : Variables.bioreactores) {
+                bio.setEstadoAdquisicion(false);
+                bio.setEstadoControlAgitacion(false);
+                bio.setEstadoControlCO2(false);
+                bio.setEstadoControlEsterilizacion(false);
+                bio.setEstadoControlOD(false);
+                bio.setEstadoControlTemperatura(false);
+                bio.setEstadoControlpH(false);
+                bio.getBomba(0).setEstadoControl(false);
+                bio.getBomba(1).setEstadoControl(false);
+                bio.getBomba(2).setEstadoControl(false);
+            }
+            Variables.añadirEvento("Apagado de equipo");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(InterfazFermentador.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        try { // Instrucciones para hacer que el computador se apague.
+            Runtime.getRuntime().exec("shutdown -s -t 2");
+        } catch (IOException ex) {
+            Logger.getLogger(InterfazFermentador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Close();
+        System.exit(0);   
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void BotonBio_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonBio_4ActionPerformed
