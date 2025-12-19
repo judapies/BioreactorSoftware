@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/graphs/ExportarLectura.java</file>
             <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/comunicacion/Hilo.java</file>
             <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/views/InterfazFermentador.java</file>
             <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/model/Bioreactor.java</file>
             <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/views/InterfazPrincipal.java</file>
             <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/graphs/BioreactorChart.java</file>
+            <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/util/LabelUpdater.java</file>
+            <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/controller/SensorManager.java</file>
             <file>file:/C:/Users/PC/Documents/JP/2025/Planta%20Bioreactores/Reactores-2025/Software%20V4.0.0/Software%20V4.0.0/FermentadorCultivoCelular/src/com/views/Monitor.java</file>
         </group>
     </open-files>
