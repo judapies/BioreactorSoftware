@@ -105,8 +105,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         if (Variables.bioreactores == null) {
             Variables.bioreactores = new ArrayList<>();
         }
-        for (int i = 101; i < 104; i++) {
-            //for (int i = 101; i < 102; i++) {//Modificado para prueba con solo un esclavo-26/11/2025
+        //for (int i = 101; i < 104; i++) {
+            for (int i = 101; i < 102; i++) {//Modificado para prueba con solo un esclavo-26/11/2025
             File f = new File("bioreactor_config_" + i + ".dat");
             if (f.exists()) {
                 try {

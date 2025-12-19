@@ -147,7 +147,7 @@ public class Hilo implements Runnable {
                     }
                 }
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(300);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -226,6 +226,7 @@ public class Hilo implements Runnable {
                     }
                 }
                 if (imprime) {
+                    System.out.println(" "+b.getId());
                     System.out.println("");
                 }
             }
