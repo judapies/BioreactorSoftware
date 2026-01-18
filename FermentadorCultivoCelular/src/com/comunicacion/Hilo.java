@@ -68,8 +68,8 @@ public class Hilo implements Runnable {
             for (int i = 0; i < Variables.bioreactores.size(); i++) {
                 Bioreactor b = Variables.bioreactores.get(i);
                 try {
-                    simulaLecturas();
-                    //b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
+                    //simulaLecturas();
+                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
                 } catch (Exception e) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, "Error en establecer Comunicacion", e);
                     JOptionPane.showMessageDialog(null,
