@@ -68,8 +68,8 @@ public class Hilo implements Runnable {
             for (int i = 0; i < Variables.bioreactores.size(); i++) {
                 Bioreactor b = Variables.bioreactores.get(i);
                 try {
-                    //simulaLecturas();
-                    b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
+                    simulaLecturas();
+                    //b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
                 } catch (Exception e) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, "Error en establecer Comunicacion", e);
                     JOptionPane.showMessageDialog(null,
@@ -253,7 +253,7 @@ public class Hilo implements Runnable {
         DecimalFormat decimales2 = new DecimalFormat("0.0");
 
         Variables.valorTemperatura += 0.1;
-        Bioreactor bio1 = Variables.bioreactores.get(1);
+        Bioreactor bio1 = Variables.bioreactores.get(0);
 
         if (bio1.isEstadoControlCO2()) {
             if (presionCamara >= bio1.getParametros().getCO2().getSetpoint() + 30) {
@@ -279,14 +279,15 @@ public class Hilo implements Runnable {
         bio1.actualizarEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1, 5);
         bio1.actualizarEntrada(Bioreactor.Entrada.PH, 7.1);
         if (bio1.isEstadoControlTemperatura()) {
-            if (bio1.leerSalida(Bioreactor.Salida.ENTRADA_INTERCAMBIADOR) == 5) {
+            bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 20.5);
+            /*if (bio1.leerSalida(Bioreactor.Salida.ENTRADA_INTERCAMBIADOR) == 5) {
                 bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura += 1.1);
             } else {
                 bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura -= 1.1);
 
-            }
+            }*/
         } else {
-            bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 98.5);
+            bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 20.5);
         }
 
     }

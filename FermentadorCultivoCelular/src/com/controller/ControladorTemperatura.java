@@ -38,6 +38,7 @@ public class ControladorTemperatura {
     private double potencia;
     private boolean calentar = true;
     private boolean mensaje = false;
+    private boolean gananciaInicializada = false;
     private int y = 0;
     private double[] x = new double[2];
 
@@ -120,7 +121,10 @@ public class ControladorTemperatura {
         histeresis = bioreactor.getParametros().getTemperatura().getHisteresis();
         derivativo = bioreactor.getParametros().getTemperatura().getDerivativo();
         integral = bioreactor.getParametros().getTemperatura().getIntegral();
-        ganancia = bioreactor.getParametros().getTemperatura().getGanancia2();
+        if (!gananciaInicializada) {
+            ganancia = bioreactor.getParametros().getTemperatura().getGanancia2();
+            gananciaInicializada = true;
+        }
         Tciclo = bioreactor.getParametros().getTemperatura().getTCiclo();
 
         t1 = System.currentTimeMillis();
@@ -181,6 +185,7 @@ public class ControladorTemperatura {
      */
     public void detenerResistencia() {
         bioreactor.activarSalida(Bioreactor.Salida.SSR, 10);
+        gananciaInicializada = false;
     }
 
     /**
@@ -214,17 +219,17 @@ public class ControladorTemperatura {
             if (temperatura <= 90) {
                 bioreactor.enfriar();
             }
-        }else{
+        } else {
             bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 5); // OFF
             bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10); // OFF
             bioreactor.detieneEnfriar();
         }
         return false;
     }
-    
+
     /**
-     * Cancela el proceso actual de esterilización,
-     * apagando todas las salidas relacionadas.
+     * Cancela el proceso actual de esterilización, apagando todas las salidas
+     * relacionadas.
      */
     public void cancelar() {
         bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10);

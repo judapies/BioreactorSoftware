@@ -9,10 +9,10 @@ package com.controller;
  * Clase que implementa el control de esterilización para un biorreactor.
  * Administra el control de temperatura, presión y tiempos necesarios para
  * ejecutar el ciclo de esterilización, así como la purga de aire.
- * 
- * Utiliza un modelo de control por histeresis y control proporcional de
- * la resistencia con parámetros configurables.
- * 
+ *
+ * Utiliza un modelo de control por histeresis y control proporcional de la
+ * resistencia con parámetros configurables.
+ *
  * @author judapies
  */
 import com.control.Variables;
@@ -35,6 +35,7 @@ public class ControladorEsterilizacion {
     private boolean finalizo = false;
     private boolean purgaAire2 = false;
     private boolean purgo = false;
+    private boolean gananciaInicializada = false;
     private long tiempoInicio = -1;
     long t1 = 0;
     long t5 = 0;
@@ -55,9 +56,9 @@ public class ControladorEsterilizacion {
     private int y = 0;
     private double[] x = new double[2];
 
-     /**
+    /**
      * Constructor del controlador de esterilización.
-     * 
+     *
      * @param bioreactor instancia del bioreactor sobre el cual se actúa
      */
     public ControladorEsterilizacion(Bioreactor bioreactor) {
@@ -67,10 +68,10 @@ public class ControladorEsterilizacion {
     /**
      * Configura los parámetros básicos del control de esterilización.
      *
-     * @param setpoint           temperatura objetivo
-     * @param histeresis         margen de control ON/OFF
-     * @param desvio             desviación permitida
-     * @param tiempoEsteriliza   duración total de la esterilización (segundos)
+     * @param setpoint temperatura objetivo
+     * @param histeresis margen de control ON/OFF
+     * @param desvio desviación permitida
+     * @param tiempoEsteriliza duración total de la esterilización (segundos)
      */
     public void configurar(double setpoint, double histeresis, double desvio, double tiempoEsteriliza) {
         this.setpoint = setpoint;
@@ -80,9 +81,11 @@ public class ControladorEsterilizacion {
     }
 
     /**
-     * Controla el proceso de esterilización basado en temperatura, presión y tiempo.
-     * 
-     * @return true si el ciclo de esterilización ha finalizado, false en otro caso
+     * Controla el proceso de esterilización basado en temperatura, presión y
+     * tiempo.
+     *
+     * @return true si el ciclo de esterilización ha finalizado, false en otro
+     * caso
      */
     public boolean controlar() {
         double presion = bioreactor.leerEntrada(Bioreactor.Entrada.PRESION_PRE_CAMARA);
@@ -155,8 +158,9 @@ public class ControladorEsterilizacion {
     }
 
     /**
-     * Controla la resistencia eléctrica del biorreactor mediante un control proporcional,
-     * aplicando correcciones en base al error, ganancia y tiempo de ciclo.
+     * Controla la resistencia eléctrica del biorreactor mediante un control
+     * proporcional, aplicando correcciones en base al error, ganancia y tiempo
+     * de ciclo.
      */
     public void controlarResistencia() {
         double temperatura = bioreactor.leerEntrada(Bioreactor.Entrada.TEMPERATURA_1);
@@ -164,10 +168,12 @@ public class ControladorEsterilizacion {
         double Temporal = 0.0;
         setpoint = bioreactor.getParametros().getEsterlizacion().getSetpoint();
         desvio = bioreactor.getParametros().getTemperatura().getDesvio();
-        histeresis = bioreactor.getParametros().getTemperatura().getHisteresis();
         derivativo = bioreactor.getParametros().getTemperatura().getDerivativo();
         integral = bioreactor.getParametros().getTemperatura().getIntegral();
-        ganancia = bioreactor.getParametros().getTemperatura().getGanancia2();
+        if (!gananciaInicializada) {
+            ganancia = bioreactor.getParametros().getTemperatura().getGanancia2();
+            gananciaInicializada = true;
+        }
         Tciclo = bioreactor.getParametros().getTemperatura().getTCiclo();
 
         t1 = System.currentTimeMillis();
@@ -265,12 +271,13 @@ public class ControladorEsterilizacion {
      */
     public void detenerResistencia() {
         bioreactor.activarSalida(Bioreactor.Salida.SSR, 10);
+        gananciaInicializada = false;
     }
 
     /**
-     * Actualiza el cálculo de la pendiente de la recta de temperatura,
-     * usado para ajustar dinámicamente la ganancia.
-     * 
+     * Actualiza el cálculo de la pendiente de la recta de temperatura, usado
+     * para ajustar dinámicamente la ganancia.
+     *
      * @param temperatura valor actual de la temperatura
      */
     public void actualizaRecta(double temperatura) {
@@ -292,14 +299,15 @@ public class ControladorEsterilizacion {
         public void actionPerformed(ActionEvent ae) {
             tiempoRecta++;
             tiempoControl++;
-            if(purgaAire2)
+            if (purgaAire2) {
                 tPurgaAire++;
+            }
         }
     });
 
     /**
      * Devuelve el tiempo transcurrido desde el inicio de la esterilización.
-     * 
+     *
      * @return segundos transcurridos desde el inicio, 0 si no ha comenzado
      */
     public long getTiempoTranscurrido() {
@@ -311,7 +319,7 @@ public class ControladorEsterilizacion {
 
     /**
      * Devuelve el tiempo restante para completar el ciclo de esterilización.
-     * 
+     *
      * @return segundos restantes, nunca menor que 0
      */
     public long getTiempoRestante() {
@@ -321,25 +329,25 @@ public class ControladorEsterilizacion {
 
     /**
      * Retorna el tiempo transcurrido y el total formateados como MM:SS / MM:SS.
-     * 
+     *
      * @return cadena con el tiempo formateado
      */
     public String getTiempoFormateado() {
         long trans = getTiempoTranscurrido();
         long total = (long) tiempoEsterilizacion;
-        
+
         /*return String.format("%02d:%02d / %02d:%02d",
-                trans / 60, trans % 60, total / 60, total % 60);*/
-        if(desfogando || finalizo){
+         trans / 60, trans % 60, total / 60, total % 60);*/
+        if (desfogando || finalizo) {
             return String.format("!Finalizado!");
-        }else{
-            return String.format("%02d:%02d",trans / 60, trans % 60);
+        } else {
+            return String.format("%02d:%02d", trans / 60, trans % 60);
         }
     }
 
     /**
      * Indica si el ciclo de esterilización está en progreso.
-     * 
+     *
      * @return true si se está esterilizando, false en otro caso
      */
     public boolean isEsterilizando() {
@@ -347,54 +355,54 @@ public class ControladorEsterilizacion {
     }
 
     /**
-     * Cancela el proceso actual de esterilización,
-     * apagando todas las salidas relacionadas.
+     * Cancela el proceso actual de esterilización, apagando todas las salidas
+     * relacionadas.
      */
     public void cancelar() {
         esterilizando = false;
         desfogando = false;
         finalizo = false;
-        purgo=false;
-        purgaAire2=false;
-        Variables.pulsosPurga=0;
+        purgo = false;
+        purgaAire2 = false;
+        Variables.pulsosPurga = 0;
         tiempoInicio = -1;
         bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10);
         bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 10);
         bioreactor.activarSalida(Bioreactor.Salida.DRENAJE, 10);
     }
-    
+
     /**
      * Realiza la lógica de purga de aire antes del inicio de la esterilización,
      * utilizando el venteo de CO2 en pulsos configurables.
      *
      * @param temperatura temperatura actual de la cámara
      */
-    void purgaAire(double temperatura){
-        if(temperatura>bioreactor.getParametros().getEsterlizacion().getTPurga() && !purgo){
-            purgaAire2=true;
-        }else{
-            purgaAire2=false;
-            if(!purgo){
+    void purgaAire(double temperatura) {
+        if (temperatura > bioreactor.getParametros().getEsterlizacion().getTPurga() && !purgo) {
+            purgaAire2 = true;
+        } else {
+            purgaAire2 = false;
+            if (!purgo) {
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 5);
-            }else{
+            } else {
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
             }
         }
-    
-        if(purgaAire2){
-            if(tPurgaAire>0 && tPurgaAire<12){
+
+        if (purgaAire2) {
+            if (tPurgaAire > 0 && tPurgaAire < 12) {
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 5);
-            }else if(tPurgaAire>=12 && tPurgaAire<66){
+            } else if (tPurgaAire >= 12 && tPurgaAire < 66) {
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
-            }else if(tPurgaAire>0){
+            } else if (tPurgaAire > 0) {
                 Variables.pulsosPurga++;
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
-                tPurgaAire=0;
+                tPurgaAire = 0;
             }
-        
-            if(Variables.pulsosPurga>=bioreactor.getParametros().getEsterlizacion().getPulsosPurga()){
-                purgaAire2=false;
-                purgo=true;
+
+            if (Variables.pulsosPurga >= bioreactor.getParametros().getEsterlizacion().getPulsosPurga()) {
+                purgaAire2 = false;
+                purgo = true;
             }
         }
     }
