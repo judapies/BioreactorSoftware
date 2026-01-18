@@ -77,14 +77,8 @@ public class Hilo implements Runnable {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                if (!Variables.testComponentes) {                    
+                if (!Variables.testComponentes) {
                     controladorNivel.get(i).controlar();
-
-                    if (b.isEstadoControlCO2()) {
-                        b.controlarVenteoCO2(b.getParametros().getCO2().getSetpoint(), b.getParametros().getCO2().getHisteresis());
-                    } else {
-                        b.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
-                    }
 
                     if (b.isEstadoControlpH()) {
                         controladorPH.get(i).controlar();
@@ -138,6 +132,12 @@ public class Hilo implements Runnable {
                             controladorEsterilizacion.get(i).controlar();
                         }
                     } else {
+                        if (b.isEstadoControlCO2()) {
+                            b.controlarVenteoCO2(b.getParametros().getCO2().getSetpoint(), b.getParametros().getCO2().getHisteresis());
+                        } else {
+                            b.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
+                        }
+                        
                         if (b.getParametros().getTemperatura().isControlIntercambiador()) {
                             controladorEsterilizacion.get(i).cancelar();
                         }
@@ -226,7 +226,7 @@ public class Hilo implements Runnable {
                     }
                 }
                 if (imprime) {
-                    System.out.println(" "+b.getId());
+                    System.out.println(" " + b.getId());
                     System.out.println("");
                 }
             }
@@ -281,11 +281,11 @@ public class Hilo implements Runnable {
         if (bio1.isEstadoControlTemperatura()) {
             bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 20.5);
             /*if (bio1.leerSalida(Bioreactor.Salida.ENTRADA_INTERCAMBIADOR) == 5) {
-                bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura += 1.1);
-            } else {
-                bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura -= 1.1);
+             bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura += 1.1);
+             } else {
+             bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, temperatura -= 1.1);
 
-            }*/
+             }*/
         } else {
             bio1.actualizarEntrada(Bioreactor.Entrada.TEMPERATURA_1, 20.5);
         }
