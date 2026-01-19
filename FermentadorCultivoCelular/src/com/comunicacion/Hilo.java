@@ -147,7 +147,7 @@ public class Hilo implements Runnable {
                     }
                 }
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(200);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -253,7 +253,7 @@ public class Hilo implements Runnable {
         DecimalFormat decimales2 = new DecimalFormat("0.0");
 
         Variables.valorTemperatura += 0.1;
-        Bioreactor bio1 = Variables.bioreactores.get(0);
+        Bioreactor bio1 = Variables.bioreactores.get(1);
 
         if (bio1.isEstadoControlCO2()) {
             if (presionCamara >= bio1.getParametros().getCO2().getSetpoint() + 30) {

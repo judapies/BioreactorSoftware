@@ -42,6 +42,8 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                 textb.setText("" + bio.getParametros().getTemperatura().getBTem());
                 BandaInferior.setText("" + bio.getParametros().getTemperatura().getBandaInferior());
                 BandaSuperior.setText("" + bio.getParametros().getTemperatura().getBandaSuperior());
+                PotenciaCalentamiento.setText("" + bio.getParametros().getTemperatura().getPotenciaCalentamiento());
+                PotenciaEnfriamiento.setText("" + bio.getParametros().getTemperatura().getPotenciaEnfriamiento());
                 CheckBoxIntercambiador.setSelected(bio.getParametros().getTemperatura().isControlIntercambiador());
             }
         }
@@ -87,11 +89,16 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         BandaInferior = new javax.swing.JTextField();
         CheckBoxIntercambiador = new javax.swing.JCheckBox();
+        jLabel13 = new javax.swing.JLabel();
+        PotenciaCalentamiento = new javax.swing.JTextField();
+        PotenciaEnfriamiento = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("JP-Biolab  Fermentors & Bioreactors");
         setAlwaysOnTop(true);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setFocusable(true);
 
@@ -291,6 +298,34 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
             }
         });
 
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel13.setText("P. Calenta:");
+
+        PotenciaCalentamiento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        PotenciaCalentamiento.setText("0");
+        PotenciaCalentamiento.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                PotenciaCalentamientoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                PotenciaCalentamientoFocusLost(evt);
+            }
+        });
+
+        PotenciaEnfriamiento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        PotenciaEnfriamiento.setText("0");
+        PotenciaEnfriamiento.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                PotenciaEnfriamientoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                PotenciaEnfriamientoFocusLost(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel14.setText("P. Enfria:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -357,7 +392,17 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(textPendiente, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(CheckBoxIntercambiador)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CheckBoxIntercambiador)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(321, 321, 321)
+                                .addComponent(PotenciaEnfriamiento, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addGap(18, 18, 18)
+                                .addComponent(PotenciaCalentamiento, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel14)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -400,8 +445,16 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(BandaSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14)
+                        .addComponent(PotenciaEnfriamiento, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel13)
+                        .addComponent(PotenciaCalentamiento, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(CheckBoxIntercambiador)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -432,26 +485,15 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Accept, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -472,6 +514,8 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
                     bio.getParametros().getTemperatura().setBTem(Double.parseDouble(textb.getText()));
                     bio.getParametros().getTemperatura().setBandaInferior(Double.parseDouble(BandaInferior.getText()));
                     bio.getParametros().getTemperatura().setBandaSuperior(Double.parseDouble(BandaSuperior.getText()));
+                    bio.getParametros().getTemperatura().setPotenciaCalentamiento(Double.parseDouble(PotenciaCalentamiento.getText()));
+                    bio.getParametros().getTemperatura().setPotenciaEnfriamiento(Double.parseDouble(PotenciaEnfriamiento.getText()));
                     bio.getParametros().getTemperatura().setControlIntercambiador(CheckBoxIntercambiador.isSelected());
                 }
             }
@@ -753,6 +797,70 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_CheckBoxIntercambiadorStateChanged
 
+    private void PotenciaCalentamientoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PotenciaCalentamientoFocusGained
+        PotenciaCalentamiento.setText(null);
+        pop = new JPopupMenu();
+        teclado = new JNumBoardPane(PotenciaCalentamiento);
+        pop.add(teclado);
+        pop.setVisible(true);
+        pop.setLocation(PotenciaCalentamiento.getLocationOnScreen().x + PotenciaCalentamiento.getSize().width, PotenciaCalentamiento.getLocationOnScreen().y);
+    }//GEN-LAST:event_PotenciaCalentamientoFocusGained
+
+    private void PotenciaCalentamientoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PotenciaCalentamientoFocusLost
+        pop.setVisible(false);
+        try {
+            double valor = Double.parseDouble(PotenciaCalentamiento.getText());
+            valor = Math.max(0.0, Math.min(valor, 1.0));
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getTemperatura().setPotenciaCalentamiento(valor);
+                    PotenciaCalentamiento.setText(""+valor);
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    PotenciaCalentamiento.setText(""+bio.getParametros().getTemperatura().getPotenciaCalentamiento());
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_PotenciaCalentamientoFocusLost
+
+    private void PotenciaEnfriamientoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PotenciaEnfriamientoFocusGained
+        PotenciaEnfriamiento.setText(null);
+        pop = new JPopupMenu();
+        teclado = new JNumBoardPane(PotenciaEnfriamiento);
+        pop.add(teclado);
+        pop.setVisible(true);
+        pop.setLocation(PotenciaEnfriamiento.getLocationOnScreen().x + PotenciaEnfriamiento.getSize().width, PotenciaEnfriamiento.getLocationOnScreen().y);
+    }//GEN-LAST:event_PotenciaEnfriamientoFocusGained
+
+    private void PotenciaEnfriamientoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PotenciaEnfriamientoFocusLost
+        pop.setVisible(false);
+        try {
+            double valor = Double.parseDouble(PotenciaEnfriamiento.getText());
+            valor = Math.max(0.0, Math.min(valor, 1.0));            
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getTemperatura().setPotenciaEnfriamiento(valor);
+                    PotenciaEnfriamiento.setText(""+ valor);
+                    break;
+                }
+            }
+
+        } catch (Exception e) {            
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    PotenciaEnfriamiento.setText(""+bio.getParametros().getTemperatura().getPotenciaEnfriamiento());
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_PotenciaEnfriamientoFocusLost
+
     /**
      * @param args the command line arguments
      */
@@ -789,11 +897,15 @@ public class AjustesControlTemperatura extends javax.swing.JFrame {
     private javax.swing.JButton Cancel;
     private javax.swing.JCheckBox CheckBoxIntercambiador;
     public static javax.swing.JTextField Histeresis;
+    public static javax.swing.JTextField PotenciaCalentamiento;
+    public static javax.swing.JTextField PotenciaEnfriamiento;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

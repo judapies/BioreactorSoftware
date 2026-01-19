@@ -36,11 +36,15 @@ public class ControladorTemperatura {
     private double Tpulso;
     private double aumento;
     private double potencia;
+    private double potenciaEnfriamiento;
+    private double potenciaCalentamiento;
     private boolean calentar = true;
     private boolean mensaje = false;
     private boolean gananciaInicializada = false;
     private int y = 0;
     private double[] x = new double[2];
+    private long inicioCicloMs = 0;
+    private long inicioCicloEnfriarMs = 0;
 
     long t1 = 0;
     long t5 = 0;
@@ -56,6 +60,83 @@ public class ControladorTemperatura {
     }
 
     /**
+     * Aplica control por tiempo proporcional (PWM lento) sobre el calentamiento
+     * del intercambiador.
+     *
+     * @param duty Fracción de tiempo ON (0.0 – 1.0)
+     * @param cicloMs Tiempo total del ciclo en milisegundos
+     */
+    public void controlarCalentamientoPWM(double duty, long cicloMs) {
+        if (duty < 0.0) {
+            duty = 0.0;
+        }
+        if (duty > 1.0) {
+            duty = 1.0;
+        }
+
+        long ahora = System.currentTimeMillis();
+
+        if (inicioCicloMs == 0) {
+            inicioCicloMs = ahora;
+        }
+
+        long tiempoEnCiclo = (ahora - inicioCicloMs);
+        if (tiempoEnCiclo >= cicloMs) {
+            inicioCicloMs = ahora;
+            tiempoEnCiclo = 0;
+        }
+
+        long tiempoON = (long) (cicloMs * duty);
+
+        if (tiempoEnCiclo < tiempoON) {
+            bioreactor.calentamientoAguaIntercambiador();   // ON
+            //System.out.println("Calentando");
+        } else {
+            bioreactor.detieneCalentamientoIntercambiador(); // OFF
+            //System.out.println("Detuvo Calentamiento");
+        }
+    }
+
+    /**
+     * Aplica control por tiempo proporcional (PWM lento) sobre el enfriamiento
+     * del intercambiador.
+     *
+     * @param duty Fracción de tiempo ON (0.0 – 1.0)
+     * @param cicloMs Tiempo total del ciclo en milisegundos
+     */
+    public void controlarEnfriamientoPWM(double duty, long cicloMs) {
+        if (duty < 0.0) {
+            duty = 0.0;
+        }
+        if (duty > 1.0) {
+            duty = 1.0;
+        }
+
+        long ahora = System.currentTimeMillis();
+        
+        if (inicioCicloEnfriarMs == 0) {
+            inicioCicloEnfriarMs = ahora;
+        }
+        
+        long tiempoEnCiclo = ahora - inicioCicloEnfriarMs;
+        
+        if (tiempoEnCiclo >= cicloMs) {
+            inicioCicloEnfriarMs = ahora;
+            tiempoEnCiclo = 0;
+        }
+
+        long tiempoON = (long) (cicloMs * duty);
+
+        if (tiempoEnCiclo < tiempoON) {
+            bioreactor.enfriar();           // ON (agua fría)
+            //System.out.println("Enfriando");
+        } else {
+            bioreactor.detieneEnfriar();    // OFF
+            //System.out.println("Detuvo Enfriamiento");
+        }
+    }
+
+    /**
      * Controla el intercambiador de calor (agua), regulando la temperatura
      * mediante calentamiento o enfriamiento según la lógica ON/OFF y la
      * disponibilidad de agua en el reservorio.
@@ -67,6 +148,8 @@ public class ControladorTemperatura {
         histeresis = bioreactor.getParametros().getTemperatura().getHisteresis();
         bandaInferior = bioreactor.getParametros().getTemperatura().getBandaInferior();
         bandaSuperior = bioreactor.getParametros().getTemperatura().getBandaSuperior();
+        potenciaCalentamiento = bioreactor.getParametros().getTemperatura().getPotenciaCalentamiento();
+        potenciaEnfriamiento = bioreactor.getParametros().getTemperatura().getPotenciaEnfriamiento();
 
         if (bioreactor.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) == 5) {//Reservorio  Lleno de agua
             if (calentar) {
@@ -77,11 +160,13 @@ public class ControladorTemperatura {
                 } else if (temperatura > setpoint + desvio) {
                     bioreactor.detieneCalentamientoIntercambiador();
                 } else if (temperatura < setpoint + desvio - histeresis) {
-                    bioreactor.calentamientoAguaIntercambiador();
+                    //bioreactor.calentamientoAguaIntercambiador();
+                    controlarCalentamientoPWM(potenciaCalentamiento, 10_000);
                 }
             } else {
                 if (temperatura <= 90) {
-                    bioreactor.enfriar();
+                    //bioreactor.enfriar();
+                    controlarEnfriamientoPWM(potenciaEnfriamiento, 10_000);
                 }
                 bioreactor.detieneCalentamientoIntercambiador();
                 if (temperatura < setpoint + bandaInferior) {

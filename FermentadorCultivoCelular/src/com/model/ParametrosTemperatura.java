@@ -26,6 +26,8 @@ public class ParametrosTemperatura extends ParametrosControl implements Serializ
     private double histeresis;
     private double bandaInferior;
     private double bandaSuperior;
+    private double potenciaCalentamiento;
+    private double potenciaEnfriamiento;
     private boolean controlIntercambiador;
 
     public double getDesvio() {
@@ -154,5 +156,33 @@ public class ParametrosTemperatura extends ParametrosControl implements Serializ
      */
     public void setControlIntercambiador(boolean controlIntercambiador) {
         this.controlIntercambiador = controlIntercambiador;
+    }
+
+    /**
+     * @return the potenciaCalentamiento
+     */
+    public double getPotenciaCalentamiento() {
+        return potenciaCalentamiento;
+    }
+
+    /**
+     * @param potenciaCalentamiento the potenciaCalentamiento to set
+     */
+    public void setPotenciaCalentamiento(double potenciaCalentamiento) {
+        this.potenciaCalentamiento = potenciaCalentamiento;
+    }
+
+    /**
+     * @return the potenciaEnfriamiento
+     */
+    public double getPotenciaEnfriamiento() {
+        return potenciaEnfriamiento;
+    }
+
+    /**
+     * @param potenciaEnfriamiento the potenciaEnfriamiento to set
+     */
+    public void setPotenciaEnfriamiento(double potenciaEnfriamiento) {
+        this.potenciaEnfriamiento = potenciaEnfriamiento;
     }
 }
