@@ -68,8 +68,14 @@ public class Hilo implements Runnable {
             for (int i = 0; i < Variables.bioreactores.size(); i++) {
                 Bioreactor b = Variables.bioreactores.get(i);
                 try {
-                    //simulaLecturas();
                     b.actualizarEntradasDesdeTrama(establecerComunicacion(b, false));
+                    //simulaLecturas();
+                    /*byte data[]=new byte[64];
+                     data[1]=93;
+                     data[2]=4;
+                     data[5]=106;
+                     data[6]=4;
+                     if(i==0)b.actualizarEntradasDesdeTrama(data);*/
                 } catch (Exception e) {
                     Logger.getLogger(Hilo.class.getName()).log(Level.SEVERE, "Error en establecer Comunicacion", e);
                     JOptionPane.showMessageDialog(null,
@@ -137,7 +143,7 @@ public class Hilo implements Runnable {
                         } else {
                             b.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
                         }
-                        
+
                         if (b.getParametros().getTemperatura().isControlIntercambiador()) {
                             controladorEsterilizacion.get(i).cancelar();
                         }

@@ -12,6 +12,7 @@ import com.graphs.Graficar;
 import com.keyboard.JNumBoardPane;
 import com.keyboard.Password;
 import com.model.Bioreactor;
+import jPicUsb.iface;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -232,6 +233,8 @@ public class InterfazFermentador extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         AjustePresion = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JPopupMenu.Separator();
+        CalibracionCO2 = new javax.swing.JMenuItem();
+        jSeparator15 = new javax.swing.JPopupMenu.Separator();
         jMenu4 = new javax.swing.JMenu();
         info = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
@@ -470,6 +473,16 @@ public class InterfazFermentador extends javax.swing.JFrame {
         });
         jMenu2.add(AjustePresion);
         jMenu2.add(jSeparator14);
+
+        CalibracionCO2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        CalibracionCO2.setText("Calibración CO2");
+        CalibracionCO2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CalibracionCO2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(CalibracionCO2);
+        jMenu2.add(jSeparator15);
 
         jMenuBar1.add(jMenu2);
 
@@ -849,6 +862,22 @@ public class InterfazFermentador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_AjustePresionActionPerformed
 
+    private void CalibracionCO2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CalibracionCO2ActionPerformed
+        for (Bioreactor bio : Variables.bioreactores) {
+            if (Variables.idBioreactor == bio.getId()) {
+                bio.activarSalida(Bioreactor.Salida.CALIB_CO2, 5);
+                iface.QWrite(bio.getTramaDeSalida(), 64, 10);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(InterfazFermentador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                bio.activarSalida(Bioreactor.Salida.CALIB_CO2, 10);
+                iface.QWrite(bio.getTramaDeSalida(), 64, 10);
+            }
+        }
+    }//GEN-LAST:event_CalibracionCO2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -876,6 +905,7 @@ public class InterfazFermentador extends javax.swing.JFrame {
     private javax.swing.JMenuItem AjustePresion;
     private javax.swing.JMenuItem Batch;
     private javax.swing.JButton BombasPeristalticas;
+    private javax.swing.JMenuItem CalibracionCO2;
     private javax.swing.JButton Control;
     private javax.swing.JMenuItem Eventos;
     public static javax.swing.JMenu Hora;
@@ -896,6 +926,7 @@ public class InterfazFermentador extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JPopupMenu.Separator jSeparator13;
     private javax.swing.JPopupMenu.Separator jSeparator14;
+    private javax.swing.JPopupMenu.Separator jSeparator15;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;

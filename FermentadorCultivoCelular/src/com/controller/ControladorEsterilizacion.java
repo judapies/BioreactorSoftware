@@ -43,6 +43,7 @@ public class ControladorEsterilizacion {
     private int tiempoRecta;
     private int tiempoControl;
     private int tPurgaAire;
+    private int pulsos;
 
     private double error;
     private double derivativo;
@@ -364,7 +365,7 @@ public class ControladorEsterilizacion {
         finalizo = false;
         purgo = false;
         purgaAire2 = false;
-        Variables.pulsosPurga = 0;
+        pulsos = 0;
         tiempoInicio = -1;
         bioreactor.activarSalida(Bioreactor.Salida.SUMINISTRO_VAPOR, 10);
         bioreactor.activarSalida(Bioreactor.Salida.DESFOGUE_VAPOR, 10);
@@ -390,17 +391,18 @@ public class ControladorEsterilizacion {
         }
 
         if (purgaAire2) {
+            System.out.println("Tpurga:"+bioreactor.getPulsosPurga());
             if (tPurgaAire > 0 && tPurgaAire < 12) {
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 5);
             } else if (tPurgaAire >= 12 && tPurgaAire < 66) {
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
             } else if (tPurgaAire > 0) {
-                Variables.pulsosPurga++;
+                bioreactor.setPulsosPurga(pulsos++);
                 bioreactor.activarSalida(Bioreactor.Salida.VENTEO_CO2, 10);
                 tPurgaAire = 0;
             }
 
-            if (Variables.pulsosPurga >= bioreactor.getParametros().getEsterlizacion().getPulsosPurga()) {
+            if (bioreactor.getPulsosPurga() >= bioreactor.getParametros().getEsterlizacion().getPulsosPurga()) {
                 purgaAire2 = false;
                 purgo = true;
             }

@@ -54,6 +54,20 @@ public class Bioreactor implements IBioreactor, Serializable {
         this.estadoAdquisicion = estadoAdquisicion;
     }
 
+    /**
+     * @return the pulsosPurga
+     */
+    public int getPulsosPurga() {
+        return pulsosPurga;
+    }
+
+    /**
+     * @param pulsosPurga the pulsosPurga to set
+     */
+    public void setPulsosPurga(int pulsosPurga) {
+        this.pulsosPurga = pulsosPurga;
+    }
+
     // === Enums para salidas y entradas ===
     public enum Salida {
 
@@ -77,7 +91,8 @@ public class Bioreactor implements IBioreactor, Serializable {
         PUENTE_H_HSB,
         AGITADOR_LSB,
         AGITADOR_MSB,
-        BUZZER
+        BUZZER,
+        CALIB_CO2
     }
 
     public enum Entrada {
@@ -114,6 +129,7 @@ public class Bioreactor implements IBioreactor, Serializable {
     private boolean estadoControlEsterilizacion = false;
     private boolean estadoAdquisicion = false;
     private int tiempoMuestreoMs = 1000;
+    private int pulsosPurga = 0;
     private long proximoMuestreoMs = 0;
     private double tiempoEsterilizacionConfigurado = 300; // por ejemplo, 5 minutos
     private long tiempoInicioEsterilizacion = -1;
@@ -241,7 +257,9 @@ public class Bioreactor implements IBioreactor, Serializable {
      * [14-15]= Presión precámara (LSB + HSB) [16] = Nivel alto (0/1) [17] =
      * Nivel medio [18] = Nivel bajo [19-20]= CO2 [21] = Entrada digital 1
      */
-    public void actualizarEntradasDesdeTrama(byte[] data) {
+    public void actualizarEntradasDesdeTrama(byte[] dat) {
+        int [] data= new int[64];
+        data=ArrayByteToArrayInt(dat);
         if (data.length < 25) {
             return;
         }
@@ -251,7 +269,7 @@ public class Bioreactor implements IBioreactor, Serializable {
         double temp2 = data[3] + data[4] / 100.0;
 
         //double ph = data[5] + data[6] / 100.0;
-        double ph_prev = (data[5] + (data[6] * 256)) / 1000.0;
+        double ph_prev = (data[5] + (data[6] * 256.0)) / 1000.0;
         double ph = (parametros.getPh().getMPH() * ph_prev) + parametros.getPh().getBPH();
         ph += parametros.getPh().getOffset();
 
@@ -289,6 +307,22 @@ public class Bioreactor implements IBioreactor, Serializable {
         actualizarEntrada(Entrada.ENTRADA_DIGITAL_1, data[22]);
         actualizarEntrada(Entrada.ENTRADA_DIGITAL_2, data[23]);
         actualizarEntrada(Entrada.ENTRADA_DIGITAL_3, data[24]);
+    }
+    
+    public static int ByteToInt8(byte x) {
+        int valor = x;
+        if (valor < 0) {
+            valor += 256;
+        }
+        return (valor);
+    }
+
+    public int[] ArrayByteToArrayInt(byte[] arreglo) {
+        int tmp[] = new int[64];
+        for (int i = 0; i < 64; i++) {
+            tmp[i] = ByteToInt8(arreglo[i]);
+        }
+        return tmp;
     }
 
     /**

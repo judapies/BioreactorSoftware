@@ -150,6 +150,7 @@ public class ControladorTemperatura {
         bandaSuperior = bioreactor.getParametros().getTemperatura().getBandaSuperior();
         potenciaCalentamiento = bioreactor.getParametros().getTemperatura().getPotenciaCalentamiento();
         potenciaEnfriamiento = bioreactor.getParametros().getTemperatura().getPotenciaEnfriamiento();
+        Tciclo = bioreactor.getParametros().getTemperatura().getTCiclo();
 
         if (bioreactor.leerEntrada(Bioreactor.Entrada.ENTRADA_DIGITAL_1) == 5) {//Reservorio  Lleno de agua
             if (calentar) {
@@ -161,12 +162,12 @@ public class ControladorTemperatura {
                     bioreactor.detieneCalentamientoIntercambiador();
                 } else if (temperatura < setpoint + desvio - histeresis) {
                     //bioreactor.calentamientoAguaIntercambiador();
-                    controlarCalentamientoPWM(potenciaCalentamiento, 10_000);
+                    controlarCalentamientoPWM(potenciaCalentamiento, (long) Tciclo*1000);
                 }
             } else {
                 if (temperatura <= 90) {
                     //bioreactor.enfriar();
-                    controlarEnfriamientoPWM(potenciaEnfriamiento, 10_000);
+                    controlarEnfriamientoPWM(potenciaEnfriamiento, (long) Tciclo*1000);
                 }
                 bioreactor.detieneCalentamientoIntercambiador();
                 if (temperatura < setpoint + bandaInferior) {
