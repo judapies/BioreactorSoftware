@@ -27,15 +27,14 @@ public class AjustespH extends javax.swing.JFrame {
     public AjustespH() {
         initComponents();
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/images/logo.png")).getImage());
-        double initial=0.1;
+        double initial = 0.5;
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
                 initial = bio.getParametros().getPh().getBanda();
             }
         }
-        double min = 0.1, max = 1.0, increment = 0.1;
-        SpinnerNumberModel model = new SpinnerNumberModel(initial, min, max, increment);
-        AjustespH.DeadBand.setModel(model);
+        SpinnerNumberModel model= new SpinnerNumberModel(Double.valueOf(0.5),Double.valueOf(0.1),Double.valueOf(2.0),Double.valueOf(0.1));
+        DeadBand.setModel(model);
 
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
@@ -43,7 +42,7 @@ public class AjustespH extends javax.swing.JFrame {
                 jTextField2.setText("" + bio.getParametros().getPh().getAlpha());
                 textPendiente.setText("" + bio.getParametros().getPh().getMPH());
                 textb.setText("" + bio.getParametros().getPh().getBPH());
-                System.out.println("Banda:"+bio.getParametros().getPh().getBanda());
+                System.out.println("Banda:" + bio.getParametros().getPh().getBanda());
                 DeadBand.setValue(bio.getParametros().getPh().getBanda());
                 jCheckBox1.setSelected(Variables.modbuspH);
             }
@@ -129,7 +128,9 @@ public class AjustespH extends javax.swing.JFrame {
         jLabel1.setText("Offset:");
 
         DeadBand.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        DeadBand.setModel(new javax.swing.SpinnerNumberModel(0.5d, 0.1d, 2.0d, 0.1d));
         DeadBand.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        DeadBand.setValue(0.5);
         DeadBand.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 DeadBandStateChanged(evt);
@@ -347,14 +348,6 @@ public class AjustespH extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField2FocusLost
 
-    private void DeadBandStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_DeadBandStateChanged
-        for (Bioreactor bio : Variables.bioreactores) {
-            if (Variables.idBioreactor == bio.getId()) {
-                bio.getParametros().getPh().setBanda((double) DeadBand.getValue());
-            }
-        }
-    }//GEN-LAST:event_DeadBandStateChanged
-
     private void textPendienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textPendienteFocusGained
         textPendiente.setText(null);
         pop = new JPopupMenu();
@@ -402,6 +395,14 @@ public class AjustespH extends javax.swing.JFrame {
     private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
         Variables.modbuspH = jCheckBox1.isSelected();
     }//GEN-LAST:event_jCheckBox1ItemStateChanged
+
+    private void DeadBandStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_DeadBandStateChanged
+        for (Bioreactor bio : Variables.bioreactores) {
+            if (Variables.idBioreactor == bio.getId()) {
+                bio.getParametros().getPh().setBanda((double) DeadBand.getValue());
+            }
+        }
+    }//GEN-LAST:event_DeadBandStateChanged
 
     /**
      * @param args the command line arguments

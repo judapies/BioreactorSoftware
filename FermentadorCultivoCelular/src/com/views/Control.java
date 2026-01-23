@@ -7,6 +7,7 @@ package com.views;
 
 import com.control.AjustesOD;
 import com.control.AjustespH;
+import static com.control.AjustespH.DeadBand;
 import com.control.Variables;
 import com.keyboard.JNumBoardPane;
 import com.model.Bioreactor;
@@ -43,15 +44,14 @@ public class Control extends javax.swing.JPanel {
         //InicioTiempo.setBackground(Color.GREEN);
         // BotonBomba.setBackground(Color.LIGHT_GRAY);                        
         AjustesOD.jComboBox1.setSelectedIndex(Variables.tipogas);
-        double initial=0;
+        double initial=0.5;
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
                 initial = bio.getParametros().getPh().getBanda();
             }
         }
-        double min = 0.1, max = 1.0, increment = 0.1;
-        SpinnerNumberModel model = new SpinnerNumberModel(initial, min, max, increment);
-        AjustespH.DeadBand.setModel(model);
+        SpinnerNumberModel model= new SpinnerNumberModel(Double.valueOf(initial),Double.valueOf(0.1),Double.valueOf(2.0),Double.valueOf(0.1));
+        DeadBand.setModel(model);
     }
 
     public static int setpointtemperatura = 0, setpointph = 0, setpointod = 0, setpointco2 = 0, setpointagitador = 0, setpointTiempo = 0, setpointEsterilizacion = 0;

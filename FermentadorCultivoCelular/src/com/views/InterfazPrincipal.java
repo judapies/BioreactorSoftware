@@ -135,6 +135,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             System.out.println(bio.getBomba(0).getPorcentajeDuty());
             System.out.println(bio.getBomba(0).getTiempoEncendidoSegundos());
             System.out.println(bio.getBomba(0).getParametros().getAsignacionBomba());
+            if(bio.getParametros().getPh().getBanda()<0.1)
+                bio.getParametros().getPh().setBanda(0.5);
             System.out.println("Banda:"+bio.getParametros().getPh().getBanda());
         }
         AbreConfig();
