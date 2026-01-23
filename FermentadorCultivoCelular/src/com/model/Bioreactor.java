@@ -236,9 +236,10 @@ public class Bioreactor implements IBioreactor, Serializable {
         // Posición 0 = ID del bioreactor
         vector[0] = (byte) id;
         vector[30] = (byte) id;
-
+        System.out.println(todasLasSalidas.length);
         // Rellenar el resto según el estado de cada salida
         for (int i = 0; i < todasLasSalidas.length; i++) {
+            System.out.println(i);
             int estado = salidas.get(todasLasSalidas[i]);
             vector[i + 1] = (byte) estado;
         }
