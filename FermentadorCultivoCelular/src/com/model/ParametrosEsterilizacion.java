@@ -15,8 +15,13 @@ public class ParametrosEsterilizacion extends ParametrosControl implements Seria
     private static final long serialVersionUID = 1L;
 
     private double desvio;
+    private double ganancia;
+    private double ganancia2;
+    private double derivativo;
+    private double integral;
     private double histeresis;
     private double TPurga;
+    private double tCiclo;
     private int pulsosPurga;
     private int tiempoMinutos;
 
@@ -83,6 +88,76 @@ public class ParametrosEsterilizacion extends ParametrosControl implements Seria
      */
     public void setPulsosPurga(int pulsosPurga) {
         this.pulsosPurga = pulsosPurga;
+    }
+
+    /**
+     * @return the ganancia
+     */
+    public double getGanancia() {
+        return ganancia;
+    }
+
+    /**
+     * @param ganancia the ganancia to set
+     */
+    public void setGanancia(double ganancia) {
+        this.ganancia = ganancia;
+    }
+
+    /**
+     * @return the ganancia2
+     */
+    public double getGanancia2() {
+        return ganancia2;
+    }
+
+    /**
+     * @param ganancia2 the ganancia2 to set
+     */
+    public void setGanancia2(double ganancia2) {
+        this.ganancia2 = ganancia2;
+    }
+
+    /**
+     * @return the derivativo
+     */
+    public double getDerivativo() {
+        return derivativo;
+    }
+
+    /**
+     * @param derivativo the derivativo to set
+     */
+    public void setDerivativo(double derivativo) {
+        this.derivativo = derivativo;
+    }
+
+    /**
+     * @return the integral
+     */
+    public double getIntegral() {
+        return integral;
+    }
+
+    /**
+     * @param integral the integral to set
+     */
+    public void setIntegral(double integral) {
+        this.integral = integral;
+    }
+
+    /**
+     * @return the tCiclo
+     */
+    public double getTCiclo() {
+        return tCiclo;
+    }
+
+    /**
+     * @param tCiclo the tCiclo to set
+     */
+    public void setTCiclo(double tCiclo) {
+        this.tCiclo = tCiclo;
     }
 }
 

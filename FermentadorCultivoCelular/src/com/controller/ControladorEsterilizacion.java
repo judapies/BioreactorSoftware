@@ -169,13 +169,13 @@ public class ControladorEsterilizacion {
         double Temporal = 0.0;
         setpoint = bioreactor.getParametros().getEsterlizacion().getSetpoint();
         desvio = bioreactor.getParametros().getEsterlizacion().getDesvio();
-        derivativo = bioreactor.getParametros().getTemperatura().getDerivativo();
-        integral = bioreactor.getParametros().getTemperatura().getIntegral();
+        derivativo = bioreactor.getParametros().getEsterlizacion().getDerivativo();
+        integral = bioreactor.getParametros().getEsterlizacion().getIntegral();
         if (!gananciaInicializada) {
-            ganancia = bioreactor.getParametros().getTemperatura().getGanancia2();
+            ganancia = bioreactor.getParametros().getEsterlizacion().getGanancia2();
             gananciaInicializada = true;
         }
-        Tciclo = bioreactor.getParametros().getTemperatura().getTCiclo();
+        Tciclo = bioreactor.getParametros().getEsterlizacion().getTCiclo();
 
         t1 = System.currentTimeMillis();
 

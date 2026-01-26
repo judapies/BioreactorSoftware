@@ -29,6 +29,10 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/images/logo.png")).getImage());
         for (Bioreactor bio : Variables.bioreactores) {
             if (Variables.idBioreactor == bio.getId()) {
+                textoI.setText("" + bio.getParametros().getEsterlizacion().getIntegral());
+                textoD.setText("" + bio.getParametros().getEsterlizacion().getDerivativo());
+                jTextField2.setText("" + bio.getParametros().getEsterlizacion().getGanancia2());
+                jTextField3.setText("" + bio.getParametros().getEsterlizacion().getTCiclo());
                 tPulsosPurga.setText("" + bio.getParametros().getEsterlizacion().getPulsosPurga());
                 Tpurga.setText("" + bio.getParametros().getEsterlizacion().getTPurga());
                 Histeresis.setText("" + bio.getParametros().getEsterlizacion().getHisteresis());
@@ -63,6 +67,14 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
         Histeresis = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        textoD = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        textoI = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("JP-Biolab  Fermentors & Bioreactors");
@@ -89,11 +101,9 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Ajustes Control de Esterilización"));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setText("Temperatura de purga:");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
 
         Tpurga.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         Tpurga.setText("0");
@@ -105,15 +115,12 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
                 TpurgaFocusLost(evt);
             }
         });
-        jPanel2.add(Tpurga, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 91, 31));
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel17.setText("°C");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setText("Pulsos Purga:");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 30, -1, -1));
 
         tPulsosPurga.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tPulsosPurga.setText("0");
@@ -125,7 +132,6 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
                 tPulsosPurgaFocusLost(evt);
             }
         });
-        jPanel2.add(tPulsosPurga, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 20, 91, 31));
 
         Tdesvio.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         Tdesvio.setText("0");
@@ -137,15 +143,12 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
                 TdesvioFocusLost(evt);
             }
         });
-        jPanel2.add(Tdesvio, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 70, 91, 31));
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel20.setText("°C");
-        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 80, -1, -1));
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel21.setText("Desvio:");
-        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
 
         Histeresis.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         Histeresis.setText("0");
@@ -157,15 +160,166 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
                 HisteresisFocusLost(evt);
             }
         });
-        jPanel2.add(Histeresis, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 70, 91, 31));
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel22.setText("Histeresis:");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 70, -1, -1));
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel23.setText("°C");
-        jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 80, -1, -1));
+
+        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextField2.setText("0");
+        jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField2FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField2FocusLost(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setText("Ganancia:");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel9.setText("D:");
+
+        textoD.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textoD.setText("0");
+        textoD.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                textoDFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                textoDFocusLost(evt);
+            }
+        });
+
+        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextField3.setText("0");
+        jTextField3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField3FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField3FocusLost(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("T. Ciclo:");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel10.setText("I:");
+
+        textoI.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        textoI.setText("0");
+        textoI.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                textoIFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                textoIFocusLost(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(4, 4, 4)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(jLabel7)
+                        .add(8, 8, 8)
+                        .add(Tpurga, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(9, 9, 9)
+                        .add(jLabel17)
+                        .add(17, 17, 17)
+                        .add(jLabel8)
+                        .add(13, 13, 13)
+                        .add(tPulsosPurga, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(48, 48, 48)
+                        .add(jLabel2)
+                        .add(18, 18, 18)
+                        .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(jLabel21)
+                                .add(132, 132, 132)
+                                .add(Tdesvio, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(9, 9, 9)
+                                .add(jLabel20))
+                            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
+                                    .add(jLabel3)
+                                    .add(143, 143, 143))
+                                .add(jPanel2Layout.createSequentialGroup()
+                                    .add(117, 117, 117)
+                                    .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                        .add(17, 17, 17)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(jLabel10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 85, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(textoI, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(jLabel22)
+                                .add(40, 40, 40)
+                                .add(Histeresis, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(19, 19, 19)
+                        .add(jLabel23)
+                        .add(18, 18, 18)
+                        .add(jLabel9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(textoD, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 91, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(14, 14, 14)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel7)
+                    .add(Tpurga, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(10, 10, 10)
+                        .add(jLabel17))
+                    .add(jLabel8)
+                    .add(tPulsosPurga, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
+                        .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jLabel2)))
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(9, 9, 9)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel21)
+                            .add(Tdesvio, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel22)
+                            .add(Histeresis, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(10, 10, 10)
+                                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jLabel20)
+                                    .add(jLabel23)))))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(jLabel9)
+                            .add(textoD, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .add(18, 18, 18)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
+                        .add(jLabel3)
+                        .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jLabel10)
+                        .add(textoI, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -183,9 +337,9 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
                                 .add(242, 242, 242)
                                 .add(Accept, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 103, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .add(214, 214, 214)
-                                .add(Cancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 103, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                        .add(0, 0, Short.MAX_VALUE))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE))
+                                .add(Cancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 103, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -196,8 +350,8 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 128, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 54, Short.MAX_VALUE)
+                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 12, Short.MAX_VALUE)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(Accept, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(Cancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -213,6 +367,10 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
         try {
             for (Bioreactor bio : Variables.bioreactores) {
                 if (Variables.idBioreactor == bio.getId()) {
+                    bio.getParametros().getEsterlizacion().setGanancia2(Double.parseDouble(jTextField2.getText()));
+                    bio.getParametros().getEsterlizacion().setTCiclo(Double.parseDouble(jTextField3.getText()));
+                    bio.getParametros().getEsterlizacion().setIntegral(Double.parseDouble(textoI.getText()));
+                    bio.getParametros().getEsterlizacion().setDerivativo(Double.parseDouble(textoD.getText()));
                     bio.getParametros().getEsterlizacion().setTPurga(Double.parseDouble(Tpurga.getText()));
                     bio.getParametros().getEsterlizacion().setDesvio(Double.parseDouble(Tdesvio.getText()));
                     bio.getParametros().getEsterlizacion().setHisteresis(Double.parseDouble(Histeresis.getText()));
@@ -317,6 +475,94 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_HisteresisFocusLost
 
+    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
+        jTextField2.setText(null);
+        pop = new JPopupMenu();
+        teclado = new JNumBoardPane(jTextField2);
+        pop.add(teclado);
+        pop.setVisible(true);
+        pop.setLocation(jTextField2.getLocationOnScreen().x + jTextField2.getSize().width, jTextField2.getLocationOnScreen().y);
+    }//GEN-LAST:event_jTextField2FocusGained
+
+    private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
+        pop.setVisible(false);
+        try {
+            jTextField2.setText("" + Integer.parseInt(jTextField2.getText()));
+        } catch (Exception e) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    jTextField2.setText("" + bio.getParametros().getEsterlizacion().getGanancia2());
+                }
+            }
+        }
+    }//GEN-LAST:event_jTextField2FocusLost
+
+    private void textoDFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textoDFocusGained
+        textoD.setText(null);
+        pop = new JPopupMenu();
+        teclado = new JNumBoardPane(textoD);
+        pop.add(teclado);
+        pop.setVisible(true);
+        pop.setLocation(textoD.getLocationOnScreen().x + textoD.getSize().width, textoD.getLocationOnScreen().y);
+    }//GEN-LAST:event_textoDFocusGained
+
+    private void textoDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textoDFocusLost
+        pop.setVisible(false);
+        try {
+            textoD.setText(""+Double.parseDouble(textoD.getText()));
+        } catch (Exception e) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    textoD.setText("" + bio.getParametros().getEsterlizacion().getDerivativo());
+                }
+            }
+        }
+    }//GEN-LAST:event_textoDFocusLost
+
+    private void jTextField3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusGained
+        jTextField3.setText(null);
+        pop = new JPopupMenu();
+        teclado = new JNumBoardPane(jTextField3);
+        pop.add(teclado);
+        pop.setVisible(true);
+        pop.setLocation(jTextField3.getLocationOnScreen().x + jTextField3.getSize().width, jTextField3.getLocationOnScreen().y);
+    }//GEN-LAST:event_jTextField3FocusGained
+
+    private void jTextField3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField3FocusLost
+        pop.setVisible(false);
+        try {
+            jTextField3.setText("" + Integer.parseInt(jTextField3.getText()));
+        } catch (Exception e) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    jTextField3.setText("" + bio.getParametros().getEsterlizacion().getTCiclo());
+                }
+            }
+        }
+    }//GEN-LAST:event_jTextField3FocusLost
+
+    private void textoIFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textoIFocusGained
+        textoI.setText(null);
+        pop = new JPopupMenu();
+        teclado = new JNumBoardPane(textoI);
+        pop.add(teclado);
+        pop.setVisible(true);
+        pop.setLocation(textoI.getLocationOnScreen().x + textoI.getSize().width, textoI.getLocationOnScreen().y);
+    }//GEN-LAST:event_textoIFocusGained
+
+    private void textoIFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_textoIFocusLost
+        pop.setVisible(false);
+        try {
+            textoI.setText(""+Double.parseDouble(textoI.getText()));
+        } catch (Exception e) {
+            for (Bioreactor bio : Variables.bioreactores) {
+                if (Variables.idBioreactor == bio.getId()) {
+                    textoI.setText("" + bio.getParametros().getEsterlizacion().getIntegral());
+                }
+            }
+        }
+    }//GEN-LAST:event_textoIFocusLost
+
     /**
      * @param args the command line arguments
      */
@@ -353,16 +599,24 @@ public class AjustesEsterilizacion extends javax.swing.JFrame {
     public static javax.swing.JTextField Tdesvio;
     public static javax.swing.JTextField Tpurga;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
+    public static javax.swing.JTextField jTextField2;
+    public static javax.swing.JTextField jTextField3;
     public static javax.swing.JTextField tPulsosPurga;
+    public static javax.swing.JTextField textoD;
+    public static javax.swing.JTextField textoI;
     // End of variables declaration//GEN-END:variables
 }
