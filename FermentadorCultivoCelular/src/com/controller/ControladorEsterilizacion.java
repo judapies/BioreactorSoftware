@@ -168,7 +168,7 @@ public class ControladorEsterilizacion {
         double presionC = bioreactor.leerEntrada(Bioreactor.Entrada.PRESION_CAMARA);
         double Temporal = 0.0;
         setpoint = bioreactor.getParametros().getEsterlizacion().getSetpoint();
-        desvio = bioreactor.getParametros().getTemperatura().getDesvio();
+        desvio = bioreactor.getParametros().getEsterlizacion().getDesvio();
         derivativo = bioreactor.getParametros().getTemperatura().getDerivativo();
         integral = bioreactor.getParametros().getTemperatura().getIntegral();
         if (!gananciaInicializada) {
@@ -191,15 +191,15 @@ public class ControladorEsterilizacion {
 
         error = desvio + setpoint - temperatura;// Cálculo del error ******
 
-        if (error > (desvio + 0.1) && aumento < 0.3 && potencia < 90) {
+        if (error > (desvio + 0.1) && aumento < 0.3 && potencia < 98) {
             if (tiempoControl >= derivativo) {
                 tiempoControl = 0;
                 if (aumento < -0.5) {
-                    ganancia += integral * 1.0;
+                    ganancia += integral * 2.0;
                 } else if (aumento < -0.1) {
-                    ganancia += integral * 0.6;
+                    ganancia += integral * 1.2;
                 } else {
-                    ganancia += integral * 0.3;
+                    ganancia += integral * 0.6;
                 }
             }
         }
