@@ -765,7 +765,7 @@ public class Control extends javax.swing.JPanel {
         if (Variables.rol.equals("Administrador")) {
             for (Bioreactor bio : Variables.bioreactores) {
                 if (Variables.idBioreactor == bio.getId()) {
-                    bio.getParametros().getAgitacion().setSetpoint(ocultaPop(SetPointAgitador, bio.getParametros().getAgitacion().getSetpoint(), 0, 200));
+                    bio.getParametros().getAgitacion().setSetpoint(ocultaPop(SetPointAgitador, bio.getParametros().getAgitacion().getSetpoint(), 50, 500));
                     Variables.añadirEvento("Cambio Setpoint de Agitación del Biorreactor " + (bio.getId() - 100) + " a " + bio.getParametros().getAgitacion().getSetpoint());
                 }
             }

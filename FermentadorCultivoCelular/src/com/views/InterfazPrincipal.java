@@ -17,7 +17,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -32,7 +37,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InterfazPrincipal extends javax.swing.JFrame {
 
-    private static final long serialVersionUID = 01;    
+    private static final long serialVersionUID = 01;
     private final int seleccion = 0;
     Imagen2 Img = new Imagen2();
     com.info.Batch abrir = new com.info.Batch();
@@ -135,9 +140,10 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             System.out.println(bio.getBomba(0).getPorcentajeDuty());
             System.out.println(bio.getBomba(0).getTiempoEncendidoSegundos());
             System.out.println(bio.getBomba(0).getParametros().getAsignacionBomba());
-            if(bio.getParametros().getPh().getBanda()<0.1)
+            if (bio.getParametros().getPh().getBanda() < 0.1) {
                 bio.getParametros().getPh().setBanda(0.5);
-            System.out.println("Banda:"+bio.getParametros().getPh().getBanda());
+            }
+            System.out.println("Banda:" + bio.getParametros().getPh().getBanda());
         }
         AbreConfig();
     }
@@ -728,20 +734,46 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     @SuppressWarnings("static-access")
     private void AjusteControlpHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AjusteControlpHActionPerformed
-        try { 
-            Runtime.getRuntime().exec("ArcAir.exe");
+        Path exe = Paths.get("C:\\Program Files (x86)\\Hamilton\\ArcAir\\ArcAir.exe");
+        ProcessBuilder pb = new ProcessBuilder(exe.toString());
+        pb.directory(exe.getParent().toFile());
+        pb.redirectErrorStream(true);
+        Process p = null;
+        try {
+            p = pb.start();
         } catch (IOException ex) {
             Logger.getLogger(InterfazPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(InterfazPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_AjusteControlpHActionPerformed
 
     private void AjusteControlODActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AjusteControlODActionPerformed
-        try { 
-            Runtime.getRuntime().exec("ArcAir.exe");
+        Path exe = Paths.get("C:\\Program Files (x86)\\Hamilton\\ArcAir\\ArcAir.exe");
+        ProcessBuilder pb = new ProcessBuilder(exe.toString());
+        pb.directory(exe.getParent().toFile());
+        pb.redirectErrorStream(true);
+        Process p = null;
+        try {
+            p = pb.start();
         } catch (IOException ex) {
             Logger.getLogger(InterfazPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(InterfazPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_AjusteControlODActionPerformed
 
@@ -840,9 +872,9 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TestComponentesActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int continuar = JOptionPane.showConfirmDialog(null,"Se apagara el Fermentador"
-                                                            + "\n¿Desea continuar?");
-        if(continuar == JOptionPane.YES_OPTION){ //si se selecciona SI
+        int continuar = JOptionPane.showConfirmDialog(null, "Se apagara el Fermentador"
+                + "\n¿Desea continuar?");
+        if (continuar == JOptionPane.YES_OPTION) { //si se selecciona SI
             for (Bioreactor bio : Variables.bioreactores) {
                 bio.setEstadoAdquisicion(false);
                 bio.setEstadoControlAgitacion(false);
@@ -861,14 +893,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             } catch (InterruptedException ex) {
                 Logger.getLogger(InterfazFermentador.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
-        try { // Instrucciones para hacer que el computador se apague.
-            Runtime.getRuntime().exec("shutdown -s -t 2");
-        } catch (IOException ex) {
-            Logger.getLogger(InterfazFermentador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Close();
-        System.exit(0);   
+
+            try { // Instrucciones para hacer que el computador se apague.
+                Runtime.getRuntime().exec("shutdown -s -t 2");
+            } catch (IOException ex) {
+                Logger.getLogger(InterfazFermentador.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Close();
+            System.exit(0);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
